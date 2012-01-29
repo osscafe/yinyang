@@ -29,6 +29,7 @@ class Template
 		console.log "hsql request : #{hsql}"
 		$.getJSON("/hsql.php?q=#{hsql}")
 		.success (data) =>
+			console.log data
 			@setValue name, data
 			@processPlaceholder name
 		.error ->

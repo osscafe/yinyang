@@ -44,6 +44,7 @@ Template = (function() {
     var _this = this;
     console.log("hsql request : " + hsql);
     return $.getJSON("/hsql.php?q=" + hsql).success(function(data) {
+      console.log(data);
       _this.setValue(name, data);
       return _this.processPlaceholder(name);
     }).error(function() {

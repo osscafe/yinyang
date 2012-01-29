@@ -1,6 +1,5 @@
 <?php
 //ダミー出力
-
 $data = array(
 	array(
 		'title' => 'ミルクコーヒーの歴史(1)',

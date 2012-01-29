@@ -190,8 +190,18 @@ SQLではデータベースのカラムをSELECT節で指定するのが一般�
 	* meta.author
 * HTMLタグ (CSSセレクタでアクセス)
 	* @title → TITLEタグの中身
+	* @div#main h3 → jQueryでいうところの、$('div#main h3').text()
 
 など。
+
+「as 〜」とすることで、カラム名を設定できます。省略した場合は、次のルールが適用されます。
+
+* ファイル情報 or HTMLのメタ情報
+	* xxx.yyy → yyy
+* HTMLタグ
+	* @xxx → xxx
+	* @xxx#yyy → xxx_yyy
+	* @xxx#yyy zzz.www → xxx\_yyy\_zzz\_www
 
 なお、ワイルドカード「*」が許されていますが、SQLと違い、これはよく使う表現へのショートハンドとなっています。
 
@@ -220,7 +230,7 @@ WHERE節は省略可能です。
 
 	WHERE meta.keyword HAS 'hot'
 
-と指定すればOKです。HASは文字列を含む場合に真となる演算子です。
+と指定すればOKです。HASは文字列を含む場合に真となる演算子です。文字列はシングルコーテーション「'」で囲みます。
 
 WHERE節で使える演算子には、次のものがあります。
 
