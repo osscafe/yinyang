@@ -26,7 +26,13 @@ class Template
 			console.log "ajax error"
 	
 	@hsql: (name, hsql) ->
-		
+		console.log "hsql request : #{hsql}"
+		$.getJSON("/hsql.php?q=#{hsql}")
+		.success (data) =>
+			@setValue name, data
+			@processPlaceholder name
+		.error ->
+			console.log "hsql error"
 	
 	@fetch: (html) ->
 		for meta in html.match /<meta.*? name="milk:[a-z][a-zA-Z0-9\.]+".*?>/gim
@@ -34,7 +40,7 @@ class Template
 			content = $(meta).attr 'content'
 			if name.match /^ajax/
 				@ajax name, content
-			else
+			else if name.match /^hsql/
 				@hsql name, content
 	
 		t = template = new Template

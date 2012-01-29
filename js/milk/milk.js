@@ -40,7 +40,16 @@ Template = (function() {
     });
   };
 
-  Template.hsql = function(name, hsql) {};
+  Template.hsql = function(name, hsql) {
+    var _this = this;
+    console.log("hsql request : " + hsql);
+    return $.getJSON("/hsql.php?q=" + hsql).success(function(data) {
+      _this.setValue(name, data);
+      return _this.processPlaceholder(name);
+    }).error(function() {
+      return console.log("hsql error");
+    });
+  };
 
   Template.fetch = function(html) {
     var content, flagment, meta, name, t, template, _i, _j, _len, _len2, _ref, _ref2;
@@ -51,7 +60,7 @@ Template = (function() {
       content = $(meta).attr('content');
       if (name.match(/^ajax/)) {
         this.ajax(name, content);
-      } else {
+      } else if (name.match(/^hsql/)) {
         this.hsql(name, content);
       }
     }

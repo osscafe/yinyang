@@ -134,6 +134,8 @@ milkが特徴的なのは、このループの中で{more}から{end}までダ�
 
 現在のバージョンではテンプレートは、都度都度クライアントサイドで解析・実行されます。milkではダミーテキストをテンプレート内に残す事ができるため、ファイルサイズが大きくなりがちです。この問題を解決するには、変換済みのテンプレートをJSON形式でサーバサイドに保存する必要があります。ですが、なるべくクライアントサイドで完結することを当面目指すため、今のところは実装されていません。
 
+----
+
 ## Ajax
 
 milk.coffeeでは、テンプレート変数に直接Ajax通信の結果をセット可能です。指定したパスには、JSON形式のファイルを置くか、JSON形式を返すスクリプトを配置しておきます。例えば、
@@ -154,14 +156,14 @@ hSQL(html Search Query Language)を使うと、テンプレートからhSQLを�
 
 	[
 		{
-			title : 'ミルクコーヒーの歴史',
-			description : '開発の動機から、その実現に至るまでを概説します。',
-			file : 'history.html',
-			created : '2012-01-28T21:18+09:00',
-			created : '2012-01-28T21:18+09:18'
+			"title" : "ミルクコーヒーの歴史",
+			"description" : "開発の動機から、その実現に至るまでを概説します。",
+			"file" : "history.html",
+			"created" : "2012-01-28T21:18+09:00",
+			"modified" : "2012-01-28T21:18+09:18"
 		},
 		{
-			title : 'ミルクコーヒーの淹れ方',
+			"title" : "ミルクコーヒーの淹れ方",
 			…省略
 		},
 		…省略
@@ -244,17 +246,8 @@ LIMIT節は省略可能です。省略した場合は、
 
 が指定されたものとみなします。
 
-	SELECT
-		@title as title,
-		meta.description as description,
-		file.name as file,
-		file.created as created,
-		file.modified as modified
-	FROM
-		./
-	WHERE
-		'hot' IN meta.keyword
-	ORDER BY
-		file.created DESC
-	LIMIT
-		3
+### hSQLからページを隠す
+
+ドキュメントHTMLに、次のMETAタグを挿入すると、hSQLの検索から排除することができます。
+
+	<meta name="hsql:searchable" content="false">
