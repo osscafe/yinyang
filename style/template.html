@@ -11,7 +11,7 @@
 	<meta name="description" content="#{meta.description}">
 	<meta name="author" content="#{meta.author}">
 	<meta name="milk:ajax.links" content="data/links.json">
-	<meta name="milk:hsql.posts" content="SELECT @title, meta.description, file.name, file.created FROM /news/ WHERE 'hot' IN meta.keyword ORDER BY file.created DESC LIMIT 3">
+	<meta name="milk:hsql.posts" content="SELECT * FROM ./ LIMIT 3">
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<link href='http://fonts.googleapis.com/css?family=Droid+Serif:700,400,400italic,700italic' rel='stylesheet' type='text/css'>
 </head>
@@ -23,7 +23,7 @@
 			<h1><a href="index.html"><!--{@title}-->Site Title<!--{end}--></a></h1>
 			<h2><!--{meta.description}-->Some clever comment about the company<!--{end}--></h2>
 			<nav>
-				<!--{link in links}-->
+				<!--{link in ajax.links}-->
 				<a href="#{link.url}"><!--{link.title}-->Home<!--{end}--></a>
 				<!--{more}-->
 				<a href="#">About</a>
@@ -46,9 +46,9 @@
 			<div id="latest">
 				<section class="left-col">
 					<h3>Latest Articles :</h3><br/>
-					<!--{post in posts}-->
+					<!--{post in ajax.posts}-->
 					<h4><a href="#"><!--{post.title}-->Blog 1<!--{end}--></a></h4>
-					<p><!--{post.lead}-->Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.<!--{end}--> &nbsp; <a href="#">Continue Reading &rarr;</a></p>
+					<p><!--{post.description}-->Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.<!--{end}--> &nbsp; <a href="#{post.file}">Continue Reading &rarr;</a></p>
 					<!--{more}-->
 					<h4><a href="#">Blog 2</a></h4>
 					<p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum. &nbsp; <a href="#">Continue Reading &rarr;</a></p>

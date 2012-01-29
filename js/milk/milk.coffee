@@ -1,18 +1,59 @@
+milk = 
+	guid: ->
+		'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
+			r = Math.random() * 16 | 0
+			v = if c is 'x' then r else r & 3 | 8
+			v.toString 16
+		.toUpperCase()
+
 class Template
 	@values:
-		meta: {}
+		meta: {} # META tag properties of the original document
+		ajax: {} # Data requested via Ajax 
+		hsql: {} # Data requested via hSQL
 		
-	@setup: ->
-		$('meta').each (index) -> Template.values.meta[$(@).attr('name')] = $(@).attr('content')
-		Template.values
+	@placeholders: {}
+		
+	@setup: -> $('meta').each (index) -> Template.values.meta[$(@).attr('name')] = $(@).attr('content')
 	
-	@create: (html) ->
+	@ajax: (name, uri) ->
+		console.log "ajax request : #{uri}"
+		$.getJSON(uri)
+		.success (data) =>
+			@setValue name, data
+			@processPlaceholder name
+		.error ->
+			console.log "ajax error"
+	
+	@hsql: (name, hsql) ->
+		
+	
+	@fetch: (html) ->
+		for meta in html.match /<meta.*? name="milk:[a-z][a-zA-Z0-9\.]+".*?>/gim
+			name = ($(meta).attr 'name').split(':')[1]
+			content = $(meta).attr 'content'
+			if name.match /^ajax/
+				@ajax name, content
+			else
+				@hsql name, content
+	
 		t = template = new Template
 		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
-		console.log template
-		template
+		#console.log template
+		template.display()
 		
-	@setValue: (key, val) -> Template.values[key] = val
+	@valueExists: (combinedKey) ->
+		attrs = combinedKey.split '.'
+		tv = Template.values
+		tv = tv[attr] ? null while tv? and attr = attrs.shift()
+		tv?
+		
+	@setValue: (combinedKey, val) ->
+		attrs = combinedKey.split '.'
+		lastattr = attrs.pop()
+		tv = Template.values
+		tv = tv[attr] ? '' while attr = attrs.shift()
+		tv[lastattr] = val
 
 	@setValues: (vals) -> Template.values[key] = val for own key, val of vals
 		
@@ -21,6 +62,14 @@ class Template
 		tv = Template.values
 		tv = tv[attr] ? '' while attr = attrs.shift()
 		tv
+		
+	@addPlaceholder: (name, callback) ->
+		@placeholders[name] = callback
+		
+	@processPlaceholder: (name) ->
+		if @placeholders[name]?
+			@placeholders[name]()
+			delete @placeholders[name]
 
 	constructor: (@parent = null, @value = '', @ignore = false) ->
 		@children = []
@@ -49,7 +98,16 @@ class Template
 	
 class TemplateLoop extends Template
 	display: (localValues) ->
+		@placeholder_id = milk.guid()
 		[elName, arrName] = @value.split /\s+in\s+/
+		if Template.valueExists arrName
+			@displayLoop localValues, elName, arrName
+		else if arrName.match /^(ajax|hsql)\./
+			@diaplayPlaceholder localValues, elName, arrName
+		else
+			console.log 'Template value not found.'
+			''
+	displayLoop: (localValues, elName, arrName) ->
 		(for el in Template.getValue arrName
 			(for child in @children
 				lv = {}
@@ -58,6 +116,11 @@ class TemplateLoop extends Template
 				child.display lv
 			).join ''
 		).join ''
+	diaplayPlaceholder: (localValues,　elName, arrName) ->
+		Template.addPlaceholder arrName, =>
+			html = @displayLoop localValues, elName, arrName
+			$("##{@placeholder_id}").before(html).remove()
+		"""<span class="loading" id="#{@placeholder_id}"></span>"""
 	
 class TemplateVar extends Template
 	display: (localValues) ->
@@ -76,33 +139,9 @@ class TemplateText extends Template
 		
 
 Template.setup()
-
-Template.setValues
-	links: [
-		title:'Home'
-		url:'/'
-	,
-		title:'About'
-		url:'/about.html'
-	,
-		title:'Documents'
-		url:'/docs.html'
-	]
-	posts: [
-		title:'Blog 1'
-		lead:'Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.'
-	,
-		title:'Blog 2'
-		lead:'Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.'
-	,
-		title:'Blog 3'
-		lead:'Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Maecenas faucibus mollis interdum.'
-	]	
-	
 href = $('link[rel=template]').attr('href')
 $.ajax
 	url: href,
 	success: (html)->
-		template = Template.create html
-		html = template.display()
+		html = Template.fetch html
 		$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
