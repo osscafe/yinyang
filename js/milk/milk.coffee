@@ -1,3 +1,23 @@
+# The MIT License
+# Copyright © 2012, CogniTom Academic Design & Tsutomu Kawamura.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of 
+# this software and associated documentation files (the “Software”), to deal in 
+# the Software without restriction, including without limitation the rights to use, 
+# copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+# Software, and to permit persons to whom the Software is furnished to do so, 
+# subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all 
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS 
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 milk = 
 	guid: ->
 		'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
@@ -14,26 +34,29 @@ class Template
 		
 	@placeholders: {}
 		
-	@setup: -> $('meta').each (index) -> Template.values.meta[$(@).attr('name')] = $(@).attr('content')
+	@setup: ->
+		$('meta').each (index) ->
+			Template.values.meta[$(@).attr('name').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content') if $(@).attr('name')?
+			console?.log Template.values
 	
 	@ajax: (name, uri) ->
-		console.log "ajax request : #{uri}"
+		console?.log "ajax request : #{uri}"
 		$.getJSON(uri)
 		.success (data) =>
 			@setValue name, data
 			@processPlaceholder name
 		.error ->
-			console.log "ajax error"
+			console?.log "ajax error"
 	
 	@hsql: (name, hsql) ->
-		console.log "hsql request : #{hsql}"
-		$.getJSON("/hsql.php?q=#{hsql}")
+		console?.log "hsql request : #{hsql}"
+		$.getJSON("hsql.php?q=#{hsql}")
 		.success (data) =>
-			console.log data
+			console?.log data
 			@setValue name, data
 			@processPlaceholder name
 		.error ->
-			console.log "hsql error"
+			console?.log "hsql error"
 	
 	@fetch: (html) ->
 		for meta in html.match /<meta.*? name="milk:[a-z][a-zA-Z0-9\.]+".*?>/gim
@@ -46,7 +69,7 @@ class Template
 	
 		t = template = new Template
 		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
-		#console.log template
+		#console?.log template
 		template.display()
 		
 	@valueExists: (combinedKey) ->
@@ -85,9 +108,9 @@ class Template
 		re = 
 			pend: /<!--\{end\}-->/
 			more: /<!--\{more\}-->/
-			pvar: /<!--\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9\.]*)\}-->/
-			ivar: /\#\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9\.]*)\}/
-			loop: /<!--\{[a-zA-Z][a-zA-Z0-9\.]* in (@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9\.]*)\}-->/
+			pvar: /<!--\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)\}-->/
+			ivar: /\#\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)\}/
+			loop: /<!--\{[a-zA-Z][a-zA-Z0-9_\.]* in (@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)\}-->/
 		if value.match re.pend then @ignore = false; @parent
 		else if value.match re.more then @ignore = true; @
 		else unless @ignore
@@ -112,7 +135,7 @@ class TemplateLoop extends Template
 		else if arrName.match /^(ajax|hsql)\./
 			@diaplayPlaceholder localValues, elName, arrName
 		else
-			console.log 'Template value not found.'
+			console?.log 'Template value not found.'
 			''
 	displayLoop: (localValues, elName, arrName) ->
 		(for el in Template.getValue arrName
