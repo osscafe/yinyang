@@ -1,7 +1,7 @@
 [
 	{"title":"Home", "url":"/"},
-	{"title":"Framework", "url":"/framework.html"},
-	{"title":"Template", "url": "/template.html"},
-	{"title":"Ajax", "url": "/ajax.html"},
-	{"title":"hSQL", "url": "/hsql.html"}
+	{"title":"Framework", "url":"/ja/framework.html"},
+	{"title":"Template", "url": "/ja/template-tag.html"},
+	{"title":"Ajax", "url": "/ja/ajax.html"},
+	{"title":"hSQL", "url": "/ja/hsql.html"}
 ]

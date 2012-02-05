@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>フレームワーク</title>
+	<meta name="og:site_name" content="milk.coffee"/>
+	<meta name="keywords" content="milk.coffee, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート">
+	<meta name="description" content="milk.coffeeはCoffeeScriptで書かれた、クライアントサイドテンプレートエンジンです。">
+	<meta name="author" content="CogniTom Academic Design">
+	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design">
+	
+	<link rel="template" href="../style/template.html">
+	<script src="../js/libs/jquery-1.7.1.min.js"></script>
+	<script src="../js/milk/milk.js"></script>
+</head>
+<body>
+	<p>多くのテンプレートエンジンと異なり、milkのテンプレートはHTML完全互換です。全てのテンプレートタグはHTMLコメント内に記述されます。</p>
+
+	<h3>テンプレート変数</h3>
+	
+	<p>最も単純な形式です。&lt;!--{変数名}--&gt; の形で使われ、&lt;!--{end}--&gt; まではダミーテキストとして無視されます。(テンプレートエンジンで解釈されません)</p>
+	
+	<pre><code>&lt;!--{copyright}--&gt;&amp;copy; 2012 Copyright reserved.&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>また、</p>
+	
+	<pre><code>&lt;a href=&quot;#{link.url}&quot;&gt;LINK&lt;/a&gt;
+	</code></pre>
+	
+	<p>のような記法も許されています。HTMLタグの内側に書く場合は、こちらの方が望ましいでしょう。</p>
+	
+	<p>※テンプレート変数を使うには、JavaScriptで変数をセットする必要があります。</p>
+	
+	<h3>メタデータ変数</h3>
+	
+	<p>テンプレート変数と使い方は同じですが、元になるドキュメントで指定されたMETAタグの内容を参照します。</p>
+	
+	<pre><code>&lt;!--{meta.description}--&gt;Some clever comment about the company&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>あるいは、</p>
+	
+	<pre><code>&lt;meta name=&quot;author&quot; content=&quot;#{meta.author}&quot;&gt;
+	</code></pre>
+	
+	<p>のように使います。</p>
+	
+	<h3>ドキュメント変数</h3>
+	
+	<p>ドキュメント変数は、CSSセレクタによって内容を取得します。</p>
+	
+	<pre><code>&lt;!--{@title}--&gt;Site Title&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>この場合、jQueryで言うところの、$(&#39;title&#39;).text() に置き換えられます。</p>
+	
+	<h3>ループ変数</h3>
+	
+	<p>VALUE in ARRAY の形式で、ループを作成できます。ループはネスト可能です。ループ内で変数を参照するにはドット「.」で繋いで、VALUE.PROPERTY のようにします。もしテンプレート変数に存在する名前を使用した場合は、ループ変数が優先です。</p>
+	
+	<pre><code>&lt;nav&gt;
+	    &lt;!--{link in links}--&gt;
+	    &lt;a href=&quot;#{link.url}&quot;&gt;&lt;!--{link.title}--&gt;Home&lt;!--{end}--&gt;&lt;/a&gt;
+	    &lt;!--{more}--&gt;
+	    &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
+	    &lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;
+	    &lt;!--{end}--&gt;
+	&lt;/nav&gt;
+	</code></pre>
+	
+	<p>milkが特徴的なのは、このループの中で{more}から{end}までダミーテキストの入力を許可している点です。これにより、デザイナは繰返しがある部分も、実際に近い状況でテンプレートデザインすることが可能になります。</p>
+	
+	<h3>変数フィルタ</h3>
+	
+	<p>主に、日付・通貨などの整形用のフィルタが用意されています。</p>
+	
+	<pre><code>&lt;!--{post.date|date:Y/m/d}--&gt;Home&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>のように、フィルタをパイプ「|」でつなぎ、コロン「:」の後に指定内容を書きます。</p>
+	
+	<ul>
+	<li>date : 日付の整形</li>
+	<li>number : 数値の整形</li>
+	</ul>
+	
+	<h3>テンプレートのプリコンパイル (検討中)</h3>
+	
+	<p>現在のバージョンではテンプレートは、都度都度クライアントサイドで解析・実行されます。milkではダミーテキストをテンプレート内に残す事ができるため、ファイルサイズが大きくなりがちです。この問題を解決するには、変換済みのテンプレートをJSON形式でサーバサイドに保存する必要があります。ですが、なるべくクライアントサイドで完結することを当面目指すため、今のところは実装されていません。</p>
+</body>
+</html>

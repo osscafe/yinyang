@@ -3,16 +3,16 @@
 <head>
 	<meta charset="utf-8" />
 	<title><!--{@title}-->Onextrapixel - Responsive Web Design Template<!--{end}--></title>
-	<link rel="stylesheet" type="text/css" href="style/reset.css" />
-	<link rel="stylesheet" type="text/css" href="style/style.css" />
-	<link rel="stylesheet" type="text/css" href="style/media-queries.css" />
+	<link rel="stylesheet" type="text/css" href="/style/reset.css" />
+	<link rel="stylesheet" type="text/css" href="/style/style.css" />
+	<link rel="stylesheet" type="text/css" href="/style/media-queries.css" />
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="#{meta.keywords}" />
+	<meta name="keywords" content="#{meta.keywords}" />
 	<meta name="description" content="#{meta.description}" />
 	<meta name="author" content="#{meta.author}" />
-	<meta name="milk:ajax.links" content="data/links.json" />
-	<meta name="milk:hsql.posts" content="SELECT * FROM ./ LIMIT 3" />
+	<meta name="milk:ajax.links" content="/data/links.json" />
+	<meta name="milk:hsql.posts" content="SELECT * FROM ja LIMIT 3" />
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 	<link href='http://fonts.googleapis.com/css?family=Droid+Serif:700,400,400italic,700italic' rel='stylesheet' type='text/css' />
 </head>
@@ -21,7 +21,7 @@
 	<div id="wrapper">
 		
 		<header>
-			<h1><a href="index.html"><!--{@title}-->Site Title<!--{end}--></a></h1>
+			<h1><a href="/"><!--{meta.og_site_name}-->Site Title<!--{end}--></a></h1>
 			<h2><!--{meta.description}-->Some clever comment about the company<!--{end}--></h2>
 			<nav>
 				<!--{link in ajax.links}-->
@@ -38,8 +38,8 @@
 				
 		<section id="main-content">
 			<div id="featured">
+				<h3><!--{@title}-->Featured Article :<!--{end}--></h3>
 				<!--{@body}-->
-				<h3>Featured Article :</h3>
 				<p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. <br/> <a href="#">Continue Reading &rarr;</a></p>
 				<!--{end}-->
 			</div>
