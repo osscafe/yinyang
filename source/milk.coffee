@@ -36,8 +36,11 @@ class Template
 		
 	@setup: ->
 		$('meta').each (index) ->
-			Template.values.meta[$(@).attr('name').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content') if $(@).attr('name')?
-			console?.log Template.values
+			if $(@).attr('name')?
+				Template.values.meta[$(@).attr('name').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content')
+			else if $(@).attr('property')?
+				Template.values.meta[$(@).attr('property').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content')
+			#console?.log Template.values
 	
 	@ajax: (name, uri) ->
 		console?.log "ajax request : #{uri}"
@@ -52,7 +55,7 @@ class Template
 		console?.log "hsql request : #{hsql}"
 		$.getJSON("/hsql.php?q=#{hsql}")
 		.success (data) =>
-			console?.log data
+			#console?.log data
 			@setValue name, data
 			@processPlaceholder name
 		.error ->
