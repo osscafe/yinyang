@@ -5,16 +5,245 @@
 
 	<title>API</title>
 	<meta name="og:site_name" content="milk.coffee"/>
-	<meta name="keywords" content="milk.coffee, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート">
-	<meta name="description" content="API Documentation of milk.coffee.">
-	<meta name="author" content="CogniTom Academic Design">
-	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design">
+	<meta name="keywords" content="milk.coffee, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
+	<meta name="description" content="API Documentation of milk.coffee." />
+	<meta name="author" content="CogniTom Academic Design" />
+	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design" />
 	
-	<link rel="template" href="../style/template.html">
+	<meta property="og:site_name" content="milk.coffee"/>
+	<meta property="og:image" content="http://www.osscafe.net/milk/style/images/photo.png">
+	
+	<meta name="pagetype" content="detail" />
+	
+	<link rel="template" href="../style/template.html" />
 	<script src="../js/jquery-1.7.1.min.js"></script>
 	<script src="../js/milk.js"></script>
 </head>
 <body>
+	<h1>API</h1>
+	<ul>
+		<li>Template Tags</li>
+		<li>Ajax</li>
+		<li>hSQL</li>
+	</ul>
+	<h2>Template Tags</h2>
 	
+	<h3>テンプレート変数</h3>
+	
+	<p>最も単純な形式です。&lt;!--{変数名}--&gt; の形で使われ、&lt;!--{end}--&gt; まではダミーテキストとして無視されます。(テンプレートエンジンで解釈されません)</p>
+	
+	<pre><code>&lt;!--{copyright}--&gt;&amp;copy; 2012 Copyright reserved.&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>また、</p>
+	
+	<pre><code>&lt;a href=&quot;#{link.url}&quot;&gt;LINK&lt;/a&gt;
+	</code></pre>
+	
+	<p>のような記法も許されています。HTMLタグの内側に書く場合は、こちらの方が望ましいでしょう。</p>
+	
+	<p>※テンプレート変数を使うには、JavaScriptで変数をセットする必要があります。</p>
+	
+	<h3>メタデータ変数</h3>
+	
+	<p>テンプレート変数と使い方は同じですが、元になるドキュメントで指定されたMETAタグの内容を参照します。</p>
+	
+	<pre><code>&lt;!--{meta.description}--&gt;Some clever comment about the company&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>あるいは、</p>
+	
+	<pre><code>&lt;meta name=&quot;author&quot; content=&quot;#{meta.author}&quot;&gt;
+	</code></pre>
+	
+	<p>のように使います。</p>
+	
+	<h3>ドキュメント変数</h3>
+	
+	<p>ドキュメント変数は、CSSセレクタによって内容を取得します。</p>
+	
+	<pre><code>&lt;!--{@title}--&gt;Site Title&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>この場合、jQueryで言うところの、$(&#39;title&#39;).text() に置き換えられます。</p>
+	
+	<h3>ループ変数</h3>
+	
+	<p>VALUE in ARRAY の形式で、ループを作成できます。ループはネスト可能です。ループ内で変数を参照するにはドット「.」で繋いで、VALUE.PROPERTY のようにします。もしテンプレート変数に存在する名前を使用した場合は、ループ変数が優先です。</p>
+	
+<pre><code>&lt;nav&gt;
+    &lt;!--{link in links}--&gt;
+    &lt;a href=&quot;#{link.url}&quot;&gt;&lt;!--{link.title}--&gt;Home&lt;!--{end}--&gt;&lt;/a&gt;
+    &lt;!--{more}--&gt;
+    &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
+    &lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;
+    &lt;!--{end}--&gt;
+&lt;/nav&gt;</code></pre>
+	
+	<p>milkが特徴的なのは、このループの中で{more}から{end}までダミーテキストの入力を許可している点です。これにより、デザイナは繰返しがある部分も、実際に近い状況でテンプレートデザインすることが可能になります。</p>
+	
+	<h3>変数フィルタ (ver 0.3〜)</h3>
+	
+	<p>主に、日付・通貨などの整形用のフィルタが用意されています。</p>
+	
+	<pre><code>&lt;!--{post.date|date:Y/m/d}--&gt;Home&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>のように、フィルタをパイプ「|」でつなぎ、コロン「:」の後に指定内容を書きます。</p>
+	
+	<ul>
+	<li>date : 日付の整形</li>
+	<li>number : 数値の整形</li>
+	</ul>
+	<h2>Ajax</h2>
+	<h3>Ajax変数</h3>
+	<p>milk.coffeeでは、テンプレート変数に直接Ajax通信の結果をセット可能です。指定したパスには、JSON形式のファイルを置くか、JSON形式を返すスクリプトを配置しておきます。例えば、</p>
+	
+	<pre><code>&lt;meta name=&quot;milk:ajax.links&quot; content=&quot;data/links.json&quot;&gt;</code></pre>
+	
+	<p>のようにMETAタグを設定します。すると、テンプレートからは、ajax.links変数を参照すれば、問合せ結果にアクセスできるようになります。</p>
+	<h2>html Search Query Language (hSQL)</h2>
+	<h3>hSQL変数</h3>
+
+	<p>hSQL(html Search Query Language)を使うと、テンプレートからhSQLを通じてサーバ上のファイルツリーとページ情報にアクセスできます。hSQLは、SQLに似た文法を持つ、HTMLファイルの検索クエリ言語です。例えば、</p>
+	
+	<pre><code>&lt;meta name=&quot;milk:hsql.posts&quot; content=&quot;SELECT * FROM ./  LIMIT 3&quot;&gt;
+	</code></pre>
+	
+	<p>のように、特殊なMETAタグを埋め込むと、テンプレートからhsql.posts変数にアクセスできるようになります。この場合、カレントフォルダ内のページから、3つのページ(HTML)のデータを(新しい順で)取得します。hSQLの問合せ結果は、次のようなJSON形式になっており、そのまま変数にセットされます。</p>
+	
+<pre><code>[
+    {
+        &quot;title&quot; : &quot;ミルクコーヒーの歴史&quot;,
+        &quot;description&quot; : &quot;開発の動機から、その実現に至るまでを概説します。&quot;,
+        &quot;file&quot; : &quot;history.html&quot;,
+        &quot;created&quot; : &quot;2012-01-28T21:18+09:00&quot;,
+        &quot;modified&quot; : &quot;2012-01-28T21:18+09:18&quot;
+    },
+    {
+        &quot;title&quot; : &quot;ミルクコーヒーの淹れ方&quot;,
+        …省略
+    },
+    …省略
+]</code></pre>
+	
+	<p>なお、hSQLを使うには、サーバサイドにヘルパーファイルが必要です。現在のところPHPに対応したファイルが提供されています。下記の2つのファイルをドキュメントルートに配置します。</p>
+	
+	<ul>
+	<li>hsql.php</li>
+	<li>.htaccess</li>
+	</ul>
+	
+	<h3>SELECT節</h3>
+	
+	<p>SQLではデータベースのカラムをSELECT節で指定するのが一般的ですが、hSQLでは、ファイル情報・HTMLのメタ情報・ HTMLタグ が、その対象です。</p>
+	
+	<ul>
+	<li>ファイル情報
+	
+	<ul>
+	<li>file.name</li>
+	<li>file.created</li>
+	<li>file.modified</li>
+	</ul></li>
+	<li>HTMLのメタ情報
+	
+	<ul>
+	<li>meta.description</li>
+	<li>meta.author</li>
+	</ul></li>
+	<li>HTMLタグ (CSSセレクタでアクセス)
+	
+	<ul>
+	<li>@title → TITLEタグの中身</li>
+	<li>@div#main h3 → jQueryでいうところの、$(&#39;div#main h3&#39;).text()</li>
+	</ul></li>
+	</ul>
+	
+	<p>など。</p>
+	
+	<p>「as 〜」とすることで、カラム名を設定できます。省略した場合は、次のルールが適用されます。</p>
+	
+	<ul>
+	<li>ファイル情報 or HTMLのメタ情報
+	
+	<ul>
+	<li>xxx.yyy → yyy</li>
+	</ul></li>
+	<li>HTMLタグ
+	
+	<ul>
+	<li>@xxx → xxx</li>
+	<li>@xxx#yyy → xxx_yyy</li>
+	<li>@xxx#yyy zzz.www → xxx_yyy_zzz_www</li>
+	</ul></li>
+	</ul>
+	
+	<p>なお、ワイルドカード「*」が許されていますが、SQLと違い、これはよく使う表現へのショートハンドとなっています。</p>
+	
+	<pre><code>SELECT * FROM ./ LIMIT 3</code></pre>
+	
+	<p>と書いた場合、</p>
+	
+<pre><code>SELECT
+    @title as title,
+    meta.description as description,
+    file.name as file,
+    file.created as created,
+    file.modified as modified
+FROM
+    ./
+LIMIT
+    3
+</code></pre>
+	
+	<p>としてhSQLが実行されます。</p>
+	
+	<h3>WHERE節 (ver 0.3〜)</h3>
+	
+	<p>WHERE節は省略可能です。</p>
+	
+	<p>例えば、METAキーワードとして「hot」が指定されているものに限定する場合、</p>
+	
+	<pre><code>WHERE meta.keyword HAS &#39;hot&#39;</code></pre>
+	
+	<p>と指定すればOKです。HASは文字列を含む場合に真となる演算子です。文字列はシングルコーテーション「&#39;」で囲みます。</p>
+	
+	<p>WHERE節で使える演算子には、次のものがあります。</p>
+	
+	<ul>
+	<li>等号 : =, IS</li>
+	<li>不等号 : &lt;&gt;, IS NOT</li>
+	<li>不等号 : &lt;, &gt;, &lt;=, &gt;=</li>
+	<li>含有 : HAS</li>
+	</ul>
+	
+	<h3>ORDER BY節</h3>
+	
+	<p>ORDER BY節は省略可能です。省略した場合は、</p>
+	
+	<pre><code>ORDER BY file.created DESC</code></pre>
+	
+	<p>が指定されたものとみなします。</p>
+	
+	<h3>LIMIT節</h3>
+	
+	<p>LIMIT節は省略可能です。省略した場合は、</p>
+	
+	<pre><code>LIMIT 10</code></pre>
+	
+	<p>が指定されたものとみなします。</p>
+	
+	<p>また、次のように書く事もできます。この場合は、11件目から10件のページに限定されます。</p>
+	
+	<pre><code>LIMIT 11, 10</code></pre>
+	
+	<h3>hSQLからページを隠す (ver 0.3〜)</h3>
+	
+	<p>ドキュメントHTMLに、次のMETAタグを挿入すると、hSQLの検索から排除することができます。</p>
+	
+	<pre><code>&lt;meta name=&quot;hsql:searchable&quot; content=&quot;false&quot;&gt;</code></pre>
+
+
 </body>
 </html>

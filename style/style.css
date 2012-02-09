@@ -19,27 +19,36 @@ table, tbody, tfoot, thead, th, tr, tdvideo, tt,
 u, ul, 
 var { background: transparent; border: 0 none; font-size: 100%; margin: 0; padding: 0; vertical-align: baseline }
 
+aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {display: block}
+
+pre { color:#555; padding:1em 2.5em; border: 1px dotted #333; background:#F7F7F7; margin-bottom:1em; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; white-space: pre-wrap; word-wrap: break-word }
+
 body { background:url(images/body.png) }
 
-body>header { background: url(images/header.png); height:64px; box-shadow: 0px 1px 3px #444; position:fixed; top:0; left:0; right:0; z-index:99 }
-body>header>.center { position:relative; width:900px; margin:0 auto }
-body>header>.center>h1 { display:none }
-body>header>.center>nav { position:absolute; top:23px; right:50px }
-body>header>.center>nav>a { margin:0 .5em; color:#666; font-weight:bold; text-decoration:none; text-shadow: #fff 1px 1px 0 }
+body>header { background: url(images/header.png); height:64px; box-shadow: 0px 1px 3px #444; position:fixed; top:0; left:0; right:0; z-index:99; opacity:0.95; }
+body>header div.center { position:relative; width:900px; margin:0 auto }
+body>header div.center>h1 { display:none }
+body>header div.center>nav { position:absolute; top:23px; right:50px }
+body>header div.center>nav>a { margin:0 .5em; color:#666; font-weight:bold; text-decoration:none; text-shadow: #fff 1px 1px 0 }
 
 #main-content { background: #FFF; padding:64px 0 3em }
-#main-content>.center { margin:.5em auto; width:900px; background: url(images/photo.png) no-repeat right top }
-#main-content h1 { font-size:300% }
-#main-content h1.logo { height:98px; text-indent:-9999px; background: url(images/logo.png) left bottom no-repeat; margin-bottom:0 }
+#main-content div.center { margin:.5em auto; width:900px; background: }
+body.top #main-content div.center { background: url(http://www.osscafe.net/style/images/milkcoffee.png) no-repeat right top }
+#main-content h1 { font-size:300%; margin-top:30px; margin-bottom:20px; color:#666; }
+#main-content h1.logo { height:98px; text-indent:-9999px; background: url(images/logo.png) left bottom no-repeat; margin-top:0; margin-bottom:0 }
 #main-content p.logo-desc { margin-top:0; text-indent:5px; color:#2B1917 }
 
 #main-content h2 { position:absolute; background: url(images/h2.png); height:48px; left:0; right:0; box-shadow: 0px 1px 6px #444; color:#FFF; text-shadow: #000 -1px -1px 0; font-size: 24px; line-height:48px; text-align:center; margin:40px 0 }
 #main-content h2+* { margin-top:128px }
-#main-content p { color:#333; text-align:justify; }
-#main-content p.lead { font-size:28px; color:#999; padding-bottom:20px }
+#main-content p { color:#555; text-align:justify; line-height:1.6em; margin-bottom:1em; }
+#main-content p.lead { font-size:30px; color:#666; line-height:1.3em; }
 #main-content img.fig { float:left; margin-right:30px }
-#main-content ul.buttons { margin-top:30px; margin-bottom:30px; list-style: none }
-#main-content ul.buttons li { display: inline-block; margin-right:10px }	
+#main-content ul { color:#555; padding:1em 2.5em .5em; border: 1px dotted #333; background:#F7F7F7; margin-bottom:1em; }
+#main-content ul ul { background:#FFF; border: 1px dotted #999; }
+#main-content ul li { margin-bottom:.5em; }
+#main-content ul.buttons { margin-top:30px; margin-bottom:25px; padding:0; list-style: none; border:none; background:none; }
+#main-content ul.buttons li { display: inline-block; margin-right:10px; margin-bottom:0; }	
 .button, .button:visited { background:#444 url(images/button-overlay.png); display: inline-block; padding: 15px 0 16px; color: #fff; text-decoration: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5); -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5); text-shadow: 0 -1px 1px rgba(0,0,0,0.25); border-bottom: 1px solid rgba(0,0,0,0.25); position: relative; cursor: pointer; text-align: center; width: 236px; font-size: 16px; margin-bottom: 8px }
 .button:hover { background-color: #111; color: #fff }
 .button:active { top: 1px }
@@ -48,18 +57,22 @@ body>header>.center>nav>a { margin:0 .5em; color:#666; font-weight:bold; text-de
 
 
 body>footer { background: url(images/footer.png) repeat-x; box-shadow: 0px -3px 3px #999 }
-body>footer>.center { width:900px; margin:0 auto; padding:30px 0; color:#999; text-align: center }
-body>footer>.center p { margin:1em 0; font-size:13px }
-body>footer>.center a.made-in-osscafe { display:inline-block; width: 320px; height:70px; text-indent:-9999px; background: url(images/made-in-osscafe.png) no-repeat }
+body>footer div.center { width:900px; margin:0 auto; padding:30px 0; color:#999; text-align: center }
+body>footer div.center p { margin:1em 0; font-size:13px }
+body>footer div.center a.made-in-osscafe { display:inline-block; width: 320px; height:70px; text-indent:-9999px; background: url(images/made-in-osscafe.png) no-repeat }
 
 img.github-ribon { position: absolute; top: 0; right: 0; border: 0; z-index:99; }
+a.see-my-template { position:fixed; bottom:100px; right:0; width:85px; height:155px; background:url(images/label.png); text-indent:-9999px; }
+span.leader { color:#999; padding-left:2em; }
 
-
-body>header>.center>nav>a,
+body>header div.center>nav>a,
 #main-content h1,
 #main-content h2,
 #main-content p.logo-desc,
-#main-content p.lead { font-family:"Droid Serif" }
+#main-content p.lead,
+.button,
+body>footer { font-family:"Abril Fatface"; font-weight:normal; }
+#main-content p.lead { font-family:"Raleway"; }
 
 
 p:after { content:"."; display:block; clear:both; visibility:hidden; line-height:0; height:0 }
