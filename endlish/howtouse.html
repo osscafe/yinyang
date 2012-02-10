@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>How To Use</title>
+	<meta name="og:site_name" content="milk.coffee"/>
+	<meta name="keywords" content="milk.coffee, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
+	<meta name="description" content="How to use milk.coffee." />
+	<meta name="author" content="CogniTom Academic Design" />
+	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design" />
+	
+	<meta property="og:site_name" content="milk.coffee"/>
+	<meta property="og:image" content="http://www.osscafe.net/style/images/milkcoffee.png">
+	
+	<meta name="pagetype" content="detail" />
+	
+	<link rel="template" href="../style/template.html" />
+	<script src="../js/jquery-1.7.1.min.js"></script>
+	<script src="../js/milk.js"></script>
+</head>
+<body>
+	<h1>How To Use</h1>
+	<p>You can download milk.coffee from <a href="http://github.com/cognitom/milk.coffee">GitHub</a>. A typical file layout would be like below (...under construction)</p>
+	
+	<ul>
+	<li>DOCUMENT_ROOT
+	
+	<ul>
+	<li>index.html</li>
+	<li>about.html</li>
+	<li>contact.html</li>
+	<li>style
+
+	<ul>
+	<li>template.html</li>
+	<li>style.css</li>
+	</ul></li>
+	<li>js
+	
+	<ul>
+	<li>milk.js</li>
+	<li>jquery-1.7.1.min.js</li>
+	</ul></li>
+	</ul></li>
+	</ul>
+	
+	<p>index.html、about.html、contact.html are document HTML files. style/template.html is a HTML file for layout.</p>
+	
+	<p>You need insert a few rows of code to HEAD tag in index.html (etc).</p>
+	
+<pre><code>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot;&gt;
+&lt;script src=&quot;js/milk.js&quot;&gt;&lt;/script&gt;</code></pre>
+	
+	<p>...</p>
+	
+	<ul>
+	<li>hsql.php</li>
+	<li>.htaccess</li>
+	</ul>
+	<h2>Documents</h2>
+	<p>...</p>
+	<ul>
+		<li>Don't use such layout tags: DIV, SECTION, ARTICLE</li>
+		<li>Headings(H1,H2,H3,H4), paragraphs(P)、images(IMG)、lists(UL,OL,LI)、link(A) are good to use.</li>
+		<li>Don't include information if it can be loaded by Ajax or hSQL.</li>
+		<li>Use META tags for your copyright, keywords, summary and categories etc.</li>
+	</ul>
+	<p>...</p>
+	<pre>
+&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;head&gt;
+	&lt;meta charset=&quot;utf-8&quot;&gt;
+	&lt;title&gt;How To Use&lt;/title&gt;
+	&lt;meta name=&quot;keywords&quot; content=&quot;milk.coffee, template, js, javascript&quot; /&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;How to use milk.coffee.&quot; /&gt;
+	&lt;meta name=&quot;copyright&quot; content=&quot;&amp;copy; 2012 - CogniTom Academic Design&quot; /&gt;
+	
+	<strong>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot; /&gt;</strong><span class="leader">(1)</span>
+	<strong>&lt;script src=&quot;js/jquery-1.7.1.min.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(2)</span>
+	<strong>&lt;script src=&quot;js/milk.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(3)</span>
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;h1&gt;How To Use&lt;/h1&gt;
+	&lt;ul&gt;
+		&lt;li&gt;Documents (Contents)&lt;/li&gt;
+		&lt;li&gt;Template&lt;/li&gt;
+		&lt;li&gt;And more&lt;/li&gt;
+	&lt;/ul&gt;
+	(...)
+&lt;/body&gt;
+&lt;/html&gt;
+	</pre>
+	<h2>A template</h2>
+	<p>...</p>
+	<h2>Additional Data</h2>
+	<p>...</p>
+	<ul>
+		<li><strong>Ajax</strong> : ...</li>
+		<li><strong>hSQL</strong> : ...</li>
+	</ul>
+	<p>...</p>
+</body>
+</html>
