@@ -16,11 +16,11 @@
 	
 	<link rel="template" href="../style/template.html" />
 	<script src="../js/jquery-1.7.1.min.js"></script>
-	<script src="../js/milk.js"></script>
+	<script src="../js/yinyang.js"></script>
 </head>
 <body>
 	<h1>How To Use</h1>
-	<p>YinYangは、<a href="http://github.com/osscafe/yinyang">こちら(GitHubのプロジェクトページ)</a>からダウンロードできます。ライブラリは「milk.js」のファイル名で提供されていますので、これを適当なフォルダに置きます。典型的な、ファイル構成は以下のようになるでしょう。</p>
+	<p>YinYangは、<a href="http://github.com/osscafe/yinyang">こちら(GitHubのプロジェクトページ)</a>からダウンロードできます。ライブラリは「yinyang.js」のファイル名で提供されていますので、これを適当なフォルダに置きます。典型的な、ファイル構成は以下のようになるでしょう。</p>
 	
 	<ul>
 	<li>DOCUMENT_ROOT
@@ -38,7 +38,7 @@
 	<li>js
 	
 	<ul>
-	<li>milk.js</li>
+	<li>yinyang.js</li>
 	<li>jquery-1.7.1.min.js</li>
 	</ul></li>
 	</ul></li>
@@ -49,7 +49,7 @@
 	<p>index.html(など)のドキュメントHTMLで、HEADタグに、</p>
 	
 <pre><code>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot;&gt;
-&lt;script src=&quot;js/milk.js&quot;&gt;&lt;/script&gt;</code></pre>
+&lt;script src=&quot;js/yinyang.js&quot;&gt;&lt;/script&gt;</code></pre>
 	
 	<p>の2行が必要です。LINKタグで、テンプレートになるHTMLファイルを指定している点に注意して下さい(CSSではなく)。現バージョンではjQueryに依存しているため、jQueryも必要です。</p>
 	
@@ -68,7 +68,7 @@
 		<li>「新着情報」など、他のページから動的に読込めるものは除外</li>
 		<li>「著作権表示」「サマリー」「カテゴリー」など、ページの「メタ情報」は、本文ではなくMETAタグに記述する</li>
 	</ul>
-	<p>そうして出来上がったHTMLは、おそらく見慣れたHTMLより随分とシンプルなものになるでしょう。これに、(1)テンプレートの指定、(2)jQuery、(3)milk.js を書き加えれば、ドキュメントHTMLは完成です。</p>
+	<p>そうして出来上がったHTMLは、おそらく見慣れたHTMLより随分とシンプルなものになるでしょう。これに、(1)テンプレートの指定、(2)jQuery、(3)yinyang.js を書き加えれば、ドキュメントHTMLは完成です。</p>
 	<pre>
 &lt;!doctype html&gt;
 &lt;html&gt;
@@ -81,7 +81,7 @@
 	
 	<strong>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot; /&gt;</strong><span class="leader">(1)</span>
 	<strong>&lt;script src=&quot;js/jquery-1.7.1.min.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(2)</span>
-	<strong>&lt;script src=&quot;js/milk.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(3)</span>
+	<strong>&lt;script src=&quot;js/yinyang.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(3)</span>
 &lt;/head&gt;
 &lt;body&gt;
 	&lt;h1&gt;How To Use&lt;/h1&gt;
