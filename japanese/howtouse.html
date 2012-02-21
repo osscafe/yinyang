@@ -4,23 +4,23 @@
 	<meta charset="utf-8">
 
 	<title>How To Use</title>
-	<meta name="keywords" content="milk.coffee, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
-	<meta name="description" content="How to use milk.coffee." />
+	<meta name="keywords" content="YinYang, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
+	<meta name="description" content="How to use YinYang." />
 	<meta name="author" content="CogniTom Academic Design" />
 	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design" />
 	
-	<meta property="og:site_name" content="milk.coffee" />
-	<meta property="og:image" content="http://www.osscafe.net/style/images/milkcoffee.png" />
+	<meta property="og:site_name" content="YinYang" />
+	<meta property="og:image" content="http://www.osscafe.net/style/images/yinyang.png" />
 	
 	<meta name="pagetype" content="detail" />
 	
 	<link rel="template" href="../style/template.html" />
 	<script src="../js/jquery-1.7.1.min.js"></script>
-	<script src="../js/milk.js"></script>
+	<script src="../js/yinyang.js"></script>
 </head>
 <body>
 	<h1>How To Use</h1>
-	<p>milk.coffeeは、<a href="http://github.com/cognitom/milk.coffee">こちら(GitHubのプロジェクトページ)</a>からダウンロードできます。ライブラリは「milk.js」のファイル名で提供されていますので、これを適当なフォルダに置きます。典型的な、ファイル構成は以下のようになるでしょう。</p>
+	<p>YinYangは、<a href="http://github.com/osscafe/yinyang">こちら(GitHubのプロジェクトページ)</a>からダウンロードできます。ライブラリは「yinyang.js」のファイル名で提供されていますので、これを適当なフォルダに置きます。典型的な、ファイル構成は以下のようになるでしょう。</p>
 	
 	<ul>
 	<li>DOCUMENT_ROOT
@@ -38,7 +38,7 @@
 	<li>js
 	
 	<ul>
-	<li>milk.js</li>
+	<li>yinyang.js</li>
 	<li>jquery-1.7.1.min.js</li>
 	</ul></li>
 	</ul></li>
@@ -49,7 +49,7 @@
 	<p>index.html(など)のドキュメントHTMLで、HEADタグに、</p>
 	
 <pre><code>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot;&gt;
-&lt;script src=&quot;js/milk.js&quot;&gt;&lt;/script&gt;</code></pre>
+&lt;script src=&quot;js/yinyang.js&quot;&gt;&lt;/script&gt;</code></pre>
 	
 	<p>の2行が必要です。LINKタグで、テンプレートになるHTMLファイルを指定している点に注意して下さい(CSSではなく)。現バージョンではjQueryに依存しているため、jQueryも必要です。</p>
 	
@@ -60,7 +60,7 @@
 	<li>.htaccess</li>
 	</ul>
 	<h2>Documents</h2>
-	<p>WEBサイトを構成する一番重要な要素、それはもちろんコンテンツです。しかし、近年のWEBサイトは1画面に多くの要素が配置され、何が主なコンテンツか分かりづらいこともしばしば。milk.coffeeでは、大事な部分だけをドキュメントHTMLに置き、付属的な情報はテンプレートに書くか、後から別途取得する(Ajax)という方法をとります。(例えば、新着情報の表示されるサイドバーはや、広告バナーなど)</p>
+	<p>WEBサイトを構成する一番重要な要素、それはもちろんコンテンツです。しかし、近年のWEBサイトは1画面に多くの要素が配置され、何が主なコンテンツか分かりづらいこともしばしば。YinYangでは、大事な部分だけをドキュメントHTMLに置き、付属的な情報はテンプレートに書くか、後から別途取得する(Ajax)という方法をとります。(例えば、新着情報の表示されるサイドバーはや、広告バナーなど)</p>
 	<p>一般的な指針は次の通りです。</p>
 	<ul>
 		<li>DIV, SECTION, ARTICLEなど、レイアウト目的のHTMLタグを使用しない</li>
@@ -68,24 +68,24 @@
 		<li>「新着情報」など、他のページから動的に読込めるものは除外</li>
 		<li>「著作権表示」「サマリー」「カテゴリー」など、ページの「メタ情報」は、本文ではなくMETAタグに記述する</li>
 	</ul>
-	<p>そうして出来上がったHTMLは、おそらく見慣れたHTMLより随分とシンプルなものになるでしょう。これに、(1)テンプレートの指定、(2)jQuery、(3)milk.js を書き加えれば、ドキュメントHTMLは完成です。</p>
+	<p>そうして出来上がったHTMLは、おそらく見慣れたHTMLより随分とシンプルなものになるでしょう。これに、(1)テンプレートの指定、(2)jQuery、(3)yinyang.js を書き加えれば、ドキュメントHTMLは完成です。</p>
 	<pre>
 &lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
 	&lt;meta charset=&quot;utf-8&quot;&gt;
 	&lt;title&gt;How To Use&lt;/title&gt;
-	&lt;meta name=&quot;keywords&quot; content=&quot;milk.coffee, template, js, javascript&quot; /&gt;
-	&lt;meta name=&quot;description&quot; content=&quot;How to use milk.coffee.&quot; /&gt;
+	&lt;meta name=&quot;keywords&quot; content=&quot;YinYang, template, js, javascript&quot; /&gt;
+	&lt;meta name=&quot;description&quot; content=&quot;How to use YinYang.&quot; /&gt;
 	&lt;meta name=&quot;copyright&quot; content=&quot;&amp;copy; 2012 - CogniTom Academic Design&quot; /&gt;
 	
 	<strong>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot; /&gt;</strong><span class="leader">(1)</span>
 	<strong>&lt;script src=&quot;js/jquery-1.7.1.min.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(2)</span>
-	<strong>&lt;script src=&quot;js/milk.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(3)</span>
+	<strong>&lt;script src=&quot;js/yinyang.js&quot;&gt;&lt;/script&gt;</strong><span class="leader">(3)</span>
 &lt;/head&gt;
 &lt;body&gt;
 	&lt;h1&gt;How To Use&lt;/h1&gt;
-	&lt;p&gt;milk.coffeeの使うにあたって、準備するものは次の3つです。&lt;/p&gt;
+	&lt;p&gt;YinYangの使うにあたって、準備するものは次の3つです。&lt;/p&gt;
 	&lt;ul&gt;
 		&lt;li&gt;ドキュメント (コンテンツ)&lt;/li&gt;
 		&lt;li&gt;テンプレート&lt;/li&gt;
@@ -99,7 +99,7 @@
 	<p>テンプレートってなんでしょうか? SmartyやERBに馴染みのある人には自明かもしれませんが、最初に簡単に説明したいと思います。</p>
 	<p>(執筆中...)</p>
 	<h2>Additional Data</h2>
-	<p>本文となるコンテンツ、ナビゲーションのリンクなど、基本的なWEBページの要素については、ここまでの説明で十分です。ですが、実際のWEBページには、様々な追加情報・関連情報を表示するのが常です。milk.coffeeでは、それらのデータを(本文と別に)Ajaxで取得します。そのための方法は2つあります。</p>
+	<p>本文となるコンテンツ、ナビゲーションのリンクなど、基本的なWEBページの要素については、ここまでの説明で十分です。ですが、実際のWEBページには、様々な追加情報・関連情報を表示するのが常です。YinYangでは、それらのデータを(本文と別に)Ajaxで取得します。そのための方法は2つあります。</p>
 	<ul>
 		<li><strong>Ajax</strong> : JSON形式のデータを静的なファイル、あるいはPHPなどのスクリプトの形で配置します。</li>
 		<li><strong>hSQL</strong> : HTMLファイルを検索するための、SQLに似たクエリを記述します。(結果は、こちらもJSONです)</li>

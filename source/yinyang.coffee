@@ -1,3 +1,10 @@
+# YinYang
+# http://osscafe.github.com/yinyang/
+#
+# YinYang is a client side template and framework. It collates documents
+# and templates as well as data retrieved by Ajax etc, and renders it as
+# a single page via JavaScript.
+#
 # The MIT License
 # Copyright © 2012, CogniTom Academic Design & Tsutomu Kawamura.
 # 
@@ -18,7 +25,9 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-milk = 
+YinYang = 
+	version: '0.1.5'
+	plugins: {}
 	guid: ->
 		'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
 			r = Math.random() * 16 | 0
@@ -26,6 +35,31 @@ milk =
 			v.toString 16
 		.toUpperCase()
 
+# [Data Plugins]
+# ajax plugin
+# http://osscafe.github.com/yinyang/english/api.html#ajax
+YinYang.plugins.ajax = (template, name, uri) ->
+	console?.log "ajax request : #{uri}"
+	$.getJSON(uri)
+	.success (data) ->
+		template.setValue name, data
+		template.processPlaceholder name
+	.error ->
+		console?.log "ajax error"
+
+# hsql plugin
+# http://osscafe.github.com/yinyang/english/api.html#hsql
+YinYang.plugins.hsql = (tamplate, name, hsql) ->
+	console?.log "hsql request : #{hsql}"
+	$.getJSON("/hsql.php?q=#{hsql}")
+	.success (data) ->
+		#console?.log data
+		template.setValue name, data
+		template.processPlaceholder name
+	.error ->
+		console?.log "hsql error"
+
+# [Template Classes]
 class Template
 	@values:
 		meta: {} # META tag properties of the original document
@@ -42,33 +76,13 @@ class Template
 				Template.values.meta[$(@).attr('property').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content')
 			#console?.log Template.values
 	
-	@ajax: (name, uri) ->
-		console?.log "ajax request : #{uri}"
-		$.getJSON(uri)
-		.success (data) =>
-			@setValue name, data
-			@processPlaceholder name
-		.error ->
-			console?.log "ajax error"
-	
-	@hsql: (name, hsql) ->
-		console?.log "hsql request : #{hsql}"
-		$.getJSON("/hsql.php?q=#{hsql}")
-		.success (data) =>
-			#console?.log data
-			@setValue name, data
-			@processPlaceholder name
-		.error ->
-			console?.log "hsql error"
-	
 	@fetch: (html) ->
-		for meta in html.match /<meta.*? name="milk:[a-z][a-zA-Z0-9\.]+".*?>/gim
-			name = ($(meta).attr 'name').split(':')[1]
+		plugin_names = (name for name, plugin of YinYang.plugins).join '|'
+		for meta in html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9\\.]+".*?>""", 'gim'
+			var_name = $(meta).attr 'name'
+			plugin_name = var_name.split('.')[0]
 			content = $(meta).attr 'content'
-			if name.match /^ajax/
-				@ajax name, content
-			else if name.match /^hsql/
-				@hsql name, content
+			YinYang.plugins[plugin_name] this, var_name, content
 	
 		t = template = new Template
 		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
@@ -131,7 +145,7 @@ class Template
 	
 class TemplateLoop extends Template
 	display: (localValues) ->
-		@placeholder_id = milk.guid()
+		@placeholder_id = YinYang.guid()
 		[elName, arrName] = @value.split /\s+in\s+/
 		if Template.valueExists arrName
 			@displayLoop localValues, elName, arrName

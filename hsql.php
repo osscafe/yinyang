@@ -27,7 +27,7 @@ echo json_encode($result);
 
 
 
-// --- CogniTom Academic Design - (c) Copyright Tsutomu Kawamura <kawamura@kawamura@cognitom.com> MIT Licensed
+// --- CogniTom Academic Design - (c) Copyright Tsutomu Kawamura <kawamura@cognitom.com> MIT Licensed
 
 define('HSQL_VERSION', '0.1.0');
 
