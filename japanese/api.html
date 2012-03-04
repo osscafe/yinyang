@@ -98,7 +98,7 @@
 	<h3>Ajax変数</h3>
 	<p>YinYangでは、テンプレート変数に直接Ajax通信の結果をセット可能です。指定したパスには、JSON形式のファイルを置くか、JSON形式を返すスクリプトを配置しておきます。例えば、</p>
 	
-	<pre><code>&lt;meta name=&quot;milk:ajax.links&quot; content=&quot;data/links.json&quot;&gt;</code></pre>
+	<pre><code>&lt;meta name=&quot;ajax.links&quot; content=&quot;data/links.json&quot;&gt;</code></pre>
 	
 	<p>のようにMETAタグを設定します。すると、テンプレートからは、ajax.links変数を参照すれば、問合せ結果にアクセスできるようになります。</p>
 	<h2>html Search Query Language (hSQL)</h2>
@@ -106,7 +106,7 @@
 
 	<p>hSQL(html Search Query Language)を使うと、テンプレートからhSQLを通じてサーバ上のファイルツリーとページ情報にアクセスできます。hSQLは、SQLに似た文法を持つ、HTMLファイルの検索クエリ言語です。例えば、</p>
 	
-	<pre><code>&lt;meta name=&quot;milk:hsql.posts&quot; content=&quot;SELECT * FROM ./  LIMIT 3&quot;&gt;
+	<pre><code>&lt;meta name=&quot;hsql.posts&quot; content=&quot;SELECT * FROM ./  LIMIT 3&quot;&gt;
 	</code></pre>
 	
 	<p>のように、特殊なMETAタグを埋め込むと、テンプレートからhsql.posts変数にアクセスできるようになります。この場合、カレントフォルダ内のページから、3つのページ(HTML)のデータを(新しい順で)取得します。hSQLの問合せ結果は、次のようなJSON形式になっており、そのまま変数にセットされます。</p>
