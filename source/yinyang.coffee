@@ -184,13 +184,16 @@ class TemplateVar extends Template
 class TemplateText extends Template
 	display: -> @value
 		
+# Loading Style Sheet
+$('head').append('<style>body {background:#FFF} body * {display:none}</style>')
 
+# Setup
 Template.setup()
 href = $('link[rel=template]').attr('href')
 $.ajax
 	url: href,
 	success: (html)->
 		tdir = href.replace /[^\/]+$/, ''
-		html = html.replace /(href|src)="([^#^/:]+)\//g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}"""
+		html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
 		html = Template.fetch html
 		$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
