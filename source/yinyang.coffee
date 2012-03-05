@@ -26,8 +26,19 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 YinYang = 
-	version: '0.1.5'
+	version: '0.1.6'
 	plugins: {}
+	filters: {}
+	createFilter: (str) ->
+		args = str.split ':'
+		filter_name = args.shift()
+		args = 
+			for arg in args
+				if arg.match /^[1-9][0-9]*$/
+					(Number) arg
+				else
+					arg.replace /^\s*('|")|("|')\s*$/g, '' 
+		if YinYang.filters[filter_name]? then new YinYang.filters[filter_name] args else new YinYang.filter args #thru
 	guid: ->
 		'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
 			r = Math.random() * 16 | 0
@@ -49,7 +60,7 @@ YinYang.plugins.ajax = (template, name, uri) ->
 
 # hsql plugin
 # http://osscafe.github.com/yinyang/english/api.html#hsql
-YinYang.plugins.hsql = (tamplate, name, hsql) ->
+YinYang.plugins.hsql = (template, name, hsql) ->
 	console?.log "hsql request : #{hsql}"
 	$.getJSON("/hsql.php?q=#{hsql}")
 	.success (data) ->
@@ -58,6 +69,30 @@ YinYang.plugins.hsql = (tamplate, name, hsql) ->
 		template.processPlaceholder name
 	.error ->
 		console?.log "hsql error"
+
+# [Filters]
+# thru filter
+class YinYang.filter
+	constructor: (@args) ->
+	process: (val) -> val
+
+# default filter
+# http://osscafe.github.com/yinyang/english/api.html#filter|default
+class YinYang.filters.default extends YinYang.filter
+	process: (val) -> val || @args[0] || ''
+
+# nl2br filter
+# http://osscafe.github.com/yinyang/english/api.html#filter|default
+class YinYang.filters.nl2br extends YinYang.filter
+	process: (val) -> val.replace /\n\r|\n|\r/, '<br />'
+
+# truncate filter
+# http://osscafe.github.com/yinyang/english/api.html#filter|default
+class YinYang.filters.truncate extends YinYang.filter
+	process: (val) ->
+		max = @args[0] || 80
+		txt = @args[1] || '...'
+		if val.length > max then val.substring(0, max - txt.length) + txt else val
 
 # [Template Classes]
 class Template
@@ -125,8 +160,8 @@ class Template
 		re = 
 			pend: /<!--\{end\}-->/
 			more: /<!--\{more\}-->/
-			pvar: /<!--\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)\}-->/
-			ivar: /\#\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)\}/
+			pvar: /<!--\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)(\|.*?)*\}-->/
+			ivar: /\#\{(@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)(\|.*?)*\}/
 			loop: /<!--\{[a-zA-Z][a-zA-Z0-9_\.]* in (@[a-zA-Z0-9_\.\#>=\[\]]+|[a-zA-Z][a-zA-Z0-9_\.]*)\}-->/
 		if value.match re.pend then @ignore = false; @parent
 		else if value.match re.more then @ignore = true; @
@@ -170,9 +205,16 @@ class TemplateLoop extends Template
 		"""<span class="loading" id="#{@placeholder_id}"></span>"""
 	
 class TemplateVar extends Template
+	constructor: (@parent = null, @value = '', @ignore = false) ->
+		fs = @value.split '|'
+		@value = fs.shift()
+		@filters = (YinYang.createFilter f for f in fs)
+		@children = []
 	display: (localValues) ->
 		@localValues = localValues
-		if @value[0] == '@' then @displayDom() else @displayVar()
+		v = if @value[0] == '@' then @displayDom() else @displayVar()
+		v = filter.process v for filter in @filters
+		v
 	displayDom: -> $(@value.substring 1).html()
 	displayVar: -> (@getLocalValue @value) or Template.getValue @value
 	getLocalValue: (combinedKey) ->
@@ -184,16 +226,13 @@ class TemplateVar extends Template
 class TemplateText extends Template
 	display: -> @value
 		
-# Loading Style Sheet
-$('head').append('<style>body {background:#FFF} body * {display:none}</style>')
 
-# Setup
 Template.setup()
 href = $('link[rel=template]').attr('href')
 $.ajax
 	url: href,
 	success: (html)->
 		tdir = href.replace /[^\/]+$/, ''
-		html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
+		html = html.replace /(href|src)="([^#^/:]+)\//g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}"""
 		html = Template.fetch html
 		$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
