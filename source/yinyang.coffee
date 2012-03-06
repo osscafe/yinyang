@@ -84,7 +84,7 @@ class YinYang.filters.default extends YinYang.filter
 # nl2br filter
 # http://osscafe.github.com/yinyang/english/api.html#filter|default
 class YinYang.filters.nl2br extends YinYang.filter
-	process: (val) -> val.replace /\n\r|\n|\r/, '<br />'
+	process: (val) -> val.replace /\n\r|\n|\r/gim, '<br />'
 
 # truncate filter
 # http://osscafe.github.com/yinyang/english/api.html#filter|default
@@ -113,7 +113,7 @@ class Template
 	
 	@fetch: (html) ->
 		plugin_names = (name for name, plugin of YinYang.plugins).join '|'
-		for meta in html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9\\.]+".*?>""", 'gim'
+		for meta in html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9_\\.]+".*?>""", 'gim'
 			var_name = $(meta).attr 'name'
 			plugin_name = var_name.split('.')[0]
 			content = $(meta).attr 'content'
@@ -233,6 +233,6 @@ $.ajax
 	url: href,
 	success: (html)->
 		tdir = href.replace /[^\/]+$/, ''
-		html = html.replace /(href|src)="([^#^/:]+)\//g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}"""
+		html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
 		html = Template.fetch html
 		$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
