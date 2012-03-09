@@ -74,25 +74,33 @@ YinYang.plugins.hsql = (template, name, hsql) ->
 # thru filter
 class YinYang.filter
 	constructor: (@args) ->
+	_process: (val) ->
+		switch @args.length
+			when 0 then @process val
+			when 1 then @process val, @args[0]
+			when 2 then @process val, @args[0], @args[1]
+			else @process val, @args[0], @args[1], @args[2]
 	process: (val) -> val
 
 # default filter
 # http://osscafe.github.com/yinyang/english/api.html#filter|default
 class YinYang.filters.default extends YinYang.filter
-	process: (val) -> val || @args[0] || ''
+	process: (val, str = '') -> val || str
 
 # nl2br filter
-# http://osscafe.github.com/yinyang/english/api.html#filter|default
+# http://osscafe.github.com/yinyang/english/api.html#filter|nl2br
 class YinYang.filters.nl2br extends YinYang.filter
-	process: (val) -> val.replace /\n\r|\n|\r/gim, '<br />'
+	process: (val) -> val.replace /\r\n|\n|\r/gim, '<br />'
 
 # truncate filter
-# http://osscafe.github.com/yinyang/english/api.html#filter|default
+# http://osscafe.github.com/yinyang/english/api.html#filter|truncate
 class YinYang.filters.truncate extends YinYang.filter
-	process: (val) ->
-		max = @args[0] || 80
-		txt = @args[1] || '...'
-		if val.length > max then val.substring(0, max - txt.length) + txt else val
+	process: (val, max = 80, txt = '...') -> if val.length > max then val.substring(0, max - txt.length) + txt else val
+
+# date_format filter
+# http://osscafe.github.com/yinyang/english/api.html#filter|date_format
+#class YinYang.filters.date_format extends YinYang.filter
+#	process: (val, format) -> strftime format, val
 
 # [Template Classes]
 class Template
@@ -213,7 +221,7 @@ class TemplateVar extends Template
 	display: (localValues) ->
 		@localValues = localValues
 		v = if @value[0] == '@' then @displayDom() else @displayVar()
-		v = filter.process v for filter in @filters
+		v = filter._process v for filter in @filters
 		v
 	displayDom: -> $(@value.substring 1).html()
 	displayVar: -> (@getLocalValue @value) or Template.getValue @value
