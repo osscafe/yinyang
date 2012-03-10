@@ -234,13 +234,22 @@ class TemplateVar extends Template
 class TemplateText extends Template
 	display: -> @value
 		
+# Loading Style Sheet
+$('head').append('<style>body {background:#FFF} body * {display:none}</style>')
 
-Template.setup()
-href = $('link[rel=template]').attr('href')
-$.ajax
-	url: href,
-	success: (html)->
-		tdir = href.replace /[^\/]+$/, ''
-		html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
-		html = Template.fetch html
-		$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
+# Setup
+$ () ->
+	Template.setup()
+	href = $('link[rel=template]').attr('href')
+	$.ajax
+		url: href,
+		success: (html)->
+			tdir = href.replace /[^\/]+$/, ''
+			html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
+			html = Template.fetch html
+			#if !$.browser.msie
+			#	$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
+			#	return
+			$('body').html (html.split /(<body.*?>|<\/body>)/ig)[2]
+			$('head').html (html.split /(<head.*?>|<\/head>)/ig)[2]
+			$('body').attr attr.name, attr.value for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
