@@ -220,7 +220,7 @@ class TemplateVar extends Template
 		@children = []
 	display: (localValues) ->
 		@localValues = localValues
-		v = if @value[0] == '@' then @displayDom() else @displayVar()
+		v = if @value.substring(0, 1) == '@' then @displayDom() else @displayVar()
 		v = filter._process v for filter in @filters
 		v
 	displayDom: -> $(@value.substring 1).html()
@@ -250,6 +250,10 @@ $ () ->
 			#if !$.browser.msie
 			#	$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
 			#	return
-			$('body').html (html.split /(<body.*?>|<\/body>)/ig)[2]
-			$('head').html (html.split /(<head.*?>|<\/head>)/ig)[2]
-			$('body').attr attr.name, attr.value for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
+			$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
+			$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
+			for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
+				if attr.name == 'class'
+					$('body').addClass attr.value
+				else if attr.value && attr.value != 'null'
+					$('body').attr attr.name, attr.value
