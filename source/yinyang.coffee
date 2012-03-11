@@ -26,7 +26,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 YinYang = 
-	version: '0.1.6'
+	version: '0.2.0'
 	plugins: {}
 	filters: {}
 	createFilter: (str) ->
