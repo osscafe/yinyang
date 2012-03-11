@@ -248,7 +248,7 @@ $ () ->
 			html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
 			html = Template.fetch html
 			#if !$.browser.msie
-			#	$('html').html (html.split /(<html.*?>|<\/html>)/ig)[2]
+			#	$('html').html (html.split /<html.*?>|<\/html>/ig)[1]
 			#	return
 			$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
 			$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
