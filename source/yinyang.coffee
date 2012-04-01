@@ -25,26 +25,96 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-YinYang = 
-	version: '0.2.0'
-	plugins: {}
-	filters: {}
-	createFilter: (str) ->
+class YinYang
+	@version: '0.2.1'
+	@plugins: {}
+	@filters: {}
+	@templates: {}
+	@createFilter: (str) ->
 		args = str.split ':'
 		filter_name = args.shift()
-		args = 
-			for arg in args
-				if arg.match /^[1-9][0-9]*$/
-					(Number) arg
-				else
-					arg.replace /^\s*('|")|("|')\s*$/g, '' 
+		args =  (if arg.match /^[1-9][0-9]*$/ then (Number) arg else arg.replace /^\s*('|")|("|')\s*$/g, '' for arg in args)
 		if YinYang.filters[filter_name]? then new YinYang.filters[filter_name] args else new YinYang.filter args #thru
-	guid: ->
+	@getTemplate: (url) -> if YinYang.templates[url]? then YinYang.templates[url] else null
+	@createTemplate: (url, html) ->
+		tdir = url.replace /[^\/]+$/, ''
+		html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
+		@templates[url] = new YinYang.Template html
+	@guid: ->
 		'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
 			r = Math.random() * 16 | 0
 			v = if c is 'x' then r else r & 3 | 8
 			v.toString 16
 		.toUpperCase()
+	
+	template: null
+	document_meta: {}
+	constructor: () -> @setup()
+	setup: ->
+		for meta in $('meta') when $(meta).attr('content')?
+			name = $(meta).attr('name') or $(meta).attr('property')
+			name = name.replace /[^a-zA-Z0-9_]/g, '_'
+			@document_meta[name] = $(meta).attr('content')
+	fetch: (url) -> 
+		$.ajax
+			url: url,
+			success: (html)=>
+				@template = YinYang.createTemplate url, html
+				html = @template.display @
+				@redrawAll html
+	redrawAll: (html) ->
+		$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
+		$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
+		for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
+			if attr.name == 'class'
+				$('body').addClass attr.value
+			else if attr.value && attr.value != 'null'
+				$('body').attr attr.name, attr.value
+
+class YinYang.Template
+	values:
+		meta: {} # META tag properties of the original document
+		ajax: {} # Data requested via Ajax 
+		hsql: {} # Data requested via hSQL
+	placeholders: {}
+	root: null
+	constructor: (html) ->
+		plugin_names = (name for name, plugin of YinYang.plugins).join '|'
+		for meta in html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9_\\.]+".*?>""", 'gim'
+			var_name = $(meta).attr 'name'
+			plugin_name = var_name.split('.')[0]
+			content = $(meta).attr 'content'
+			YinYang.plugins[plugin_name] this, var_name, content
+		t = @root = new YinYang.TemplateRoot @
+		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
+		#console?.log @root
+	display: (doc) ->
+		@values.meta = doc.document_meta
+		@root.display()	
+	valueExists: (combinedKey) ->
+		attrs = combinedKey.split '.'
+		tv = @values
+		tv = tv[attr] ? null while tv? and attr = attrs.shift()
+		tv?
+	setValue: (combinedKey, val) ->
+		attrs = combinedKey.split '.'
+		lastattr = attrs.pop()
+		tv = @values
+		tv = tv[attr] ? '' while attr = attrs.shift()
+		tv[lastattr] = val
+	setValues: (vals) -> @values[key] = val for own key, val of vals
+	getValue: (combinedKey) ->
+		attrs = combinedKey.split '.'
+		tv = @values
+		tv = tv[attr] ? '' while attr = attrs.shift()
+		tv	
+	addPlaceholder: (name, callback) ->
+		@placeholders[name] = callback
+	processPlaceholder: (name) ->
+		if @placeholders[name]?
+			@placeholders[name]()
+			delete @placeholders[name]
+	
 
 # [Data Plugins]
 # ajax plugin
@@ -101,69 +171,11 @@ class YinYang.filters.truncate extends YinYang.filter
 # http://osscafe.github.com/yinyang/english/api.html#filter|date_format
 #class YinYang.filters.date_format extends YinYang.filter
 #	process: (val, format) -> strftime format, val
-
+		
 # [Template Classes]
-class Template
-	@values:
-		meta: {} # META tag properties of the original document
-		ajax: {} # Data requested via Ajax 
-		hsql: {} # Data requested via hSQL
-		
-	@placeholders: {}
-		
-	@setup: ->
-		$('meta').each (index) ->
-			if $(@).attr('name')?
-				Template.values.meta[$(@).attr('name').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content')
-			else if $(@).attr('property')?
-				Template.values.meta[$(@).attr('property').replace /[^a-zA-Z0-9_]/g, '_'] = $(@).attr('content')
-			#console?.log Template.values
-	
-	@fetch: (html) ->
-		plugin_names = (name for name, plugin of YinYang.plugins).join '|'
-		for meta in html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9_\\.]+".*?>""", 'gim'
-			var_name = $(meta).attr 'name'
-			plugin_name = var_name.split('.')[0]
-			content = $(meta).attr 'content'
-			YinYang.plugins[plugin_name] this, var_name, content
-	
-		t = template = new Template
-		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
-		#console?.log template
-		template.display()
-		
-	@valueExists: (combinedKey) ->
-		attrs = combinedKey.split '.'
-		tv = Template.values
-		tv = tv[attr] ? null while tv? and attr = attrs.shift()
-		tv?
-		
-	@setValue: (combinedKey, val) ->
-		attrs = combinedKey.split '.'
-		lastattr = attrs.pop()
-		tv = Template.values
-		tv = tv[attr] ? '' while attr = attrs.shift()
-		tv[lastattr] = val
-
-	@setValues: (vals) -> Template.values[key] = val for own key, val of vals
-		
-	@getValue: (combinedKey) ->
-		attrs = combinedKey.split '.'
-		tv = Template.values
-		tv = tv[attr] ? '' while attr = attrs.shift()
-		tv
-		
-	@addPlaceholder: (name, callback) ->
-		@placeholders[name] = callback
-		
-	@processPlaceholder: (name) ->
-		if @placeholders[name]?
-			@placeholders[name]()
-			delete @placeholders[name]
-
-	constructor: (@parent = null, @value = '', @ignore = false) ->
+class YinYang.TemplateRoot
+	constructor: (@template, @parent = null, @value = '', @ignore = false) ->
 		@children = []
-		
 	add: (value) ->
 		re = 
 			pend: /<!--\{end\}-->/
@@ -174,10 +186,10 @@ class Template
 		if value.match re.pend then @ignore = false; @parent
 		else if value.match re.more then @ignore = true; @
 		else unless @ignore
-			if value.match re.pvar then @_add 'child', new TemplateVar @, value.replace(/<!--{|}-->/g, ''), true
-			else if value.match re.ivar then @_add 'self', new TemplateVar @, value.replace /\#\{|\}/g, ''
-			else if value.match re.loop then @_add 'child', new TemplateLoop @, value.replace /<!--{|}-->/g, ''
-			else @_add 'self', new TemplateText @, value
+			if value.match re.pvar then @_add 'child', new YinYang.TemplateVar @template, @, value.replace(/<!--{|}-->/g, ''), true
+			else if value.match re.ivar then @_add 'self', new YinYang.TemplateVar @template, @, value.replace /\#\{|\}/g, ''
+			else if value.match re.loop then @_add 'child', new YinYang.TemplateLoop @template, @, value.replace /<!--{|}-->/g, ''
+			else @_add 'self', new YinYang.TemplateText @template, @, value
 		else  @
 	_add: (ret, t) ->
 		@children.push t
@@ -186,11 +198,11 @@ class Template
 			when 'self' then @
 	display: (localValues = {}) -> (child.display localValues for child in @children).join ''
 	
-class TemplateLoop extends Template
+class YinYang.TemplateLoop extends YinYang.TemplateRoot
 	display: (localValues) ->
 		@placeholder_id = YinYang.guid()
 		[elName, arrName] = @value.split /\s+in\s+/
-		if Template.valueExists arrName
+		if @template.valueExists arrName
 			@displayLoop localValues, elName, arrName
 		else if arrName.match /^(ajax|hsql)\./
 			@diaplayPlaceholder localValues, elName, arrName
@@ -198,7 +210,7 @@ class TemplateLoop extends Template
 			console?.log 'Template value not found.'
 			''
 	displayLoop: (localValues, elName, arrName) ->
-		(for el in Template.getValue arrName
+		(for el in @template.getValue arrName
 			(for child in @children
 				lv = {}
 				lv[key] = val for key, val of localValues
@@ -207,13 +219,13 @@ class TemplateLoop extends Template
 			).join ''
 		).join ''
 	diaplayPlaceholder: (localValues,　elName, arrName) ->
-		Template.addPlaceholder arrName, =>
+		@template.addPlaceholder arrName, =>
 			html = @displayLoop localValues, elName, arrName
 			$("##{@placeholder_id}").before(html).remove()
 		"""<span class="loading" id="#{@placeholder_id}"></span>"""
 	
-class TemplateVar extends Template
-	constructor: (@parent = null, @value = '', @ignore = false) ->
+class YinYang.TemplateVar extends YinYang.TemplateRoot
+	constructor: (@template, @parent = null, @value = '', @ignore = false) ->
 		fs = @value.split '|'
 		@value = fs.shift()
 		@filters = (YinYang.createFilter f for f in fs)
@@ -222,38 +234,25 @@ class TemplateVar extends Template
 		@localValues = localValues
 		v = if @value.substring(0, 1) == '@' then @displayDom() else @displayVar()
 		v = filter._process v for filter in @filters
+		#console?.log @value + ':' + v
 		v
 	displayDom: -> $(@value.substring 1).html()
-	displayVar: -> (@getLocalValue @value) or Template.getValue @value
+	displayVar: -> (@getLocalValue @value) or @template.getValue @value
 	getLocalValue: (combinedKey) ->
 		attrs = combinedKey.split '.'
 		tv = @localValues
 		tv = tv[attr] ? '' while attr = attrs.shift()
 		tv
 	
-class TemplateText extends Template
+class YinYang.TemplateText extends YinYang.TemplateRoot
 	display: -> @value
 		
+
 # Loading Style Sheet
 $('head').append('<style>body {background:#FFF} body * {display:none}</style>')
 
 # Setup
 $ () ->
-	Template.setup()
 	href = $('link[rel=template]').attr('href')
-	$.ajax
-		url: href,
-		success: (html)->
-			tdir = href.replace /[^\/]+$/, ''
-			html = html.replace /(href|src)="((?![a-z]+:\/\/|\.\/|\/|\#).*?)"/g, () -> """#{arguments[1]}="#{tdir}#{arguments[2]}" """
-			html = Template.fetch html
-			#if !$.browser.msie
-			#	$('html').html (html.split /<html.*?>|<\/html>/ig)[1]
-			#	return
-			$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
-			$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
-			for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
-				if attr.name == 'class'
-					$('body').addClass attr.value
-				else if attr.value && attr.value != 'null'
-					$('body').attr attr.name, attr.value
+	yy = new YinYang
+	yy.fetch href
