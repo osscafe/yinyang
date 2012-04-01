@@ -26,10 +26,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class YinYang
-	@version: '0.2.1'
+	@version: '0.2.2'
 	@plugins: {}
 	@filters: {}
 	@templates: {}
+	@readycounter: 0
 	@createFilter: (str) ->
 		args = str.split ':'
 		filter_name = args.shift()
@@ -51,20 +52,24 @@ class YinYang
 	
 	template: null
 	document_meta: {}
+	selfload: false
 	constructor: () -> @setup()
 	setup: ->
 		for meta in $('meta') when $(meta).attr('content')?
 			name = $(meta).attr('name') or $(meta).attr('property')
-			name = name.replace /[^a-zA-Z0-9_]/g, '_'
-			@document_meta[name] = $(meta).attr('content')
-	fetch: (url) -> 
-		$.ajax
-			url: url,
-			success: (html)=>
-				@template = YinYang.createTemplate url, html
-				html = @template.display @
-				@redrawAll html
+			if name == 'yinyang:selfload' && $(meta).attr('content') == 'true'
+				@selfload = true
+			else
+				name = name.replace /[^a-zA-Z0-9_]/g, '_'
+				@document_meta[name] = $(meta).attr('content')
+	fetch: (url) ->
+		if @selfload then @redrawAll @build location.href, $('html').html()
+		if url then $.ajax url: url, success: (html) => @redrawAll @build url, html
+	build: (url, html) =>
+		@template = YinYang.createTemplate url, html
+		@template.display @
 	redrawAll: (html) ->
+		html = html.replace /<script.*?src=".*?yinyang.js".*?><\/script>/gim, '' # avoid loading yinyang.js twice
 		$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
 		$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
 		for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
@@ -84,8 +89,8 @@ class YinYang.filter
 	process: (val) -> val
 
 # Setup
+$('head').append '<style>body {background:#FFF} body * {display:none}</style>' # Loading Style Sheet
 $ () ->
-	if href = $('link[rel=template]').attr('href')
-		$('head').append '<style>body {background:#FFF} body * {display:none}</style>' # Loading Style Sheet
-		yy = new YinYang
-		yy.fetch href # fetch template from url
+	href = $('link[rel=template]').attr('href')
+	yy = new YinYang
+	yy.fetch href # fetch template from url
