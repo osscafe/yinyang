@@ -33,7 +33,9 @@ class YinYang
 	@createFilter: (str) ->
 		args = str.split ':'
 		filter_name = args.shift()
-		args =  (if arg.match /^[1-9][0-9]*$/ then (Number) arg else arg.replace /^\s*('|")|("|')\s*$/g, '' for arg in args)
+		args =
+			for arg in args
+				if arg.match /^[1-9][0-9]*$/ then (Number) arg else arg.replace /^\s*('|")|("|')\s*$/g, ''
 		if YinYang.filters[filter_name]? then new YinYang.filters[filter_name] args else new YinYang.filter args #thru
 	@getTemplate: (url) -> if YinYang.templates[url]? then YinYang.templates[url] else null
 	@createTemplate: (url, html) ->
@@ -80,7 +82,7 @@ class YinYang.Template
 	root: null
 	constructor: (html) ->
 		plugin_names = (name for name, plugin of YinYang.plugins).join '|'
-		for meta in html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9_\\.]+".*?>""", 'gim'
+		for meta in (html.match new RegExp """<meta.*? name="(#{plugin_names})\\.[a-z][a-zA-Z0-9_\\.]+".*?>""", 'gim') or []
 			var_name = $(meta).attr 'name'
 			plugin_name = var_name.split('.')[0]
 			content = $(meta).attr 'content'
@@ -234,7 +236,7 @@ class YinYang.TemplateVar extends YinYang.TemplateRoot
 		@localValues = localValues
 		v = if @value.substring(0, 1) == '@' then @displayDom() else @displayVar()
 		v = filter._process v for filter in @filters
-		#console?.log @value + ':' + v
+		#console?.log @value + ':' + v #for debug
 		v
 	displayDom: -> $(@value.substring 1).html()
 	displayVar: -> (@getLocalValue @value) or @template.getValue @value
@@ -246,13 +248,11 @@ class YinYang.TemplateVar extends YinYang.TemplateRoot
 	
 class YinYang.TemplateText extends YinYang.TemplateRoot
 	display: -> @value
-		
 
-# Loading Style Sheet
-$('head').append('<style>body {background:#FFF} body * {display:none}</style>')
 
 # Setup
 $ () ->
-	href = $('link[rel=template]').attr('href')
-	yy = new YinYang
-	yy.fetch href
+	if href = $('link[rel=template]').attr('href')
+		$('head').append '<style>body {background:#FFF} body * {display:none}</style>' # Loading Style Sheet
+		yy = new YinYang
+		yy.fetch href # fetch template from url
