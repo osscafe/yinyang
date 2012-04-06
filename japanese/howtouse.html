@@ -48,10 +48,13 @@
 	
 	<p>index.html(など)のドキュメントHTMLで、HEADタグに、</p>
 	
-<pre><code>&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot;&gt;
-&lt;script src=&quot;js/yinyang.js&quot;&gt;&lt;/script&gt;</code></pre>
+<pre class="prettyprint linenums">
+&lt;link rel=&quot;template&quot; href=&quot;style/template.html&quot;&gt;
+&lt;script src=&quot;js/jquery.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/yinyang.js&quot;&gt;&lt;/script&gt;
+</pre>
 	
-	<p>の2行が必要です。LINKタグで、テンプレートになるHTMLファイルを指定している点に注意して下さい(CSSではなく)。現バージョンではjQueryに依存しているため、jQueryも必要です。</p>
+	<p>の3行が必要です。LINKタグで、テンプレートになるHTMLファイルを指定している点に注意して下さい(CSSではなく)。※現バージョンではjQueryに依存しています。</p>
 	
 	<p>また、後述のhSQLを利用するには、サーバサイドのヘルパーを導入します。上記のファイル群に加えて、下記のファイルをドキュメントルートに加える必要があります。詳しくは、hSQLの項を参照。hSQLは、テンプレートからサーバ上のファイルツリーとHTMLの情報にアクセスするための便利な方法です。</p>
 	
@@ -69,7 +72,8 @@
 		<li>「著作権表示」「サマリー」「カテゴリー」など、ページの「メタ情報」は、本文ではなくMETAタグに記述する</li>
 	</ul>
 	<p>そうして出来上がったHTMLは、おそらく見慣れたHTMLより随分とシンプルなものになるでしょう。これに、(1)テンプレートの指定、(2)jQuery、(3)yinyang.js を書き加えれば、ドキュメントHTMLは完成です。</p>
-	<pre>
+
+<pre class="prettyprint linenums">
 &lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -94,7 +98,8 @@
 	(省略...)
 &lt;/body&gt;
 &lt;/html&gt;
-	</pre>
+</pre>
+
 	<h2>A template</h2>
 	<p>テンプレートってなんでしょうか? SmartyやERBに馴染みのある人には自明かもしれませんが、最初に簡単に説明したいと思います。</p>
 	<p>(執筆中...)</p>

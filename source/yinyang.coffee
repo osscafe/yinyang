@@ -30,7 +30,6 @@ class YinYang
 	@plugins: {}
 	@filters: {}
 	@templates: {}
-	@readycounter: 0
 	@createFilter: (str) ->
 		args = str.split ':'
 		filter_name = args.shift()
@@ -63,7 +62,7 @@ class YinYang
 				name = name.replace /[^a-zA-Z0-9_]/g, '_'
 				@document_meta[name] = $(meta).attr('content')
 	fetch: (url) ->
-		if @selfload then @redrawAll @build location.href, $('html').html()
+		if @selfload then @redrawAll @build location.href, $('html').html().replace /#%7B(.*?)%7D/gm, '#{$1}'
 		if url then $.ajax url: url, success: (html) => @redrawAll @build url, html
 	build: (url, html) =>
 		@template = YinYang.createTemplate url, html
@@ -72,7 +71,7 @@ class YinYang
 		html = html.replace /<script.*?src=".*?yinyang.js".*?><\/script>/gim, '' # avoid loading yinyang.js twice
 		$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
 		$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
-		for attr in $((html.match /<body.*?>/)[0].replace /^\<body/, '<div')[0].attributes
+		for attr in $((html.match /<body.*?>/i)[0].replace /^\<body/i, '<div')[0].attributes
 			if attr.name == 'class'
 				$('body').addClass attr.value
 			else if attr.value && attr.value != 'null'
