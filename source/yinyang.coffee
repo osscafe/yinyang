@@ -62,7 +62,7 @@ class YinYang
 				name = name.replace /[^a-zA-Z0-9_]/g, '_'
 				@document_meta[name] = $(meta).attr('content')
 	fetch: (url) ->
-		if @selfload then @redrawAll @build location.href, $('html').html()
+		if @selfload then @redrawAll @build location.href, $('html').html().replace /#%7B(.*?)%7D/gm, '#{$1}'
 		if url then $.ajax url: url, success: (html) => @redrawAll @build url, html
 	build: (url, html) =>
 		@template = YinYang.createTemplate url, html
