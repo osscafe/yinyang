@@ -21,17 +21,59 @@
 </head>
 <body>
 	<h1>Filters</h1>
+	<p>YinYangでは、フィルターを使って<a href="http://www.smarty.net/docs/ja/language.modifiers.tpl">Smartyの修飾子</a>のように、テキストを変換して表示する事が可能です。このページでは、Original Text にフィルターを適用した場合を表示しています。</p>
 	<h2>Original Text</h2>
-	<p class="sample">Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-	Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
-	<h2>Filter Tests</h2>
-	<h3>default:"(no value)"</h3>
-	<p><!--{@p.notExists|default:"no value"}-->content<!--{end}--></p>
+	<p class="sample">
+		Lorem Ipsum is simply dummy text of the printing and 
+		typesetting industry. <br />
+		Lorem Ipsum has been the industry's standard dummy
+		text ever since the 1500s, when an unknown printer
+		took a galley of type and scrambled it to make a type
+		specimen book. </p>
+<pre class="prettyprint linenums">
+&lt;p class=&quot;sample&quot;&gt;
+  Lorem Ipsum is simply dummy text of the printing and 
+  typesetting industry. <br />
+  Lorem Ipsum has been the industry's standard dummy
+  text ever since the 1500s, when an unknown printer
+  took a galley of type and scrambled it to make a type
+  specimen book.
+&lt;/p&gt;
+</pre>
+	<h2>Smarty Compatible Filters</h2>
+	<h3>default</h3>
+	<p><!--{@p.sample|default:"(no value)"}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|default:&quot;(no value)&quot;}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<p><!--{@p.notExists|default:"(no value)"}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.notExists|default:&quot;(no value)&quot;}--&gt;content&lt;!--{end}--&gt;
+</pre>
 	<h3>nl2br</h3>
 	<p><!--{@p.sample|nl2br}-->content<!--{end}--></p>
-	<h3>truncate:50</h3>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|nl2br}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h3>truncate</h3>
 	<p><!--{@p.sample|truncate:50}-->content<!--{end}--></p>
-	<h3>truncate:100:...続く</h3>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|truncate:50}--&gt;content&lt;!--{end}--&gt;
+</pre>
 	<p><!--{@p.sample|truncate:100:'...続く'}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|truncate:100:'...続く'}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h2>Other Filters</h2>
+	<h3>beforetag</h3>
+	<p><!--{@p.sample|beforetag:br}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|beforetag:br}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h3>aftertag</h3>
+	<p><!--{@p.sample|aftertag:br}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|aftertag:br}--&gt;content&lt;!--{end}--&gt;
+</pre>
 </body>
 </html>

@@ -95,7 +95,7 @@
     YinYang.prototype.fetch = function(url) {
       var _this = this;
       if (this.selfload) {
-        this.redrawAll(this.build(location.href, $('html').html()));
+        this.redrawAll(this.build(location.href, $('html').html().replace(/#%7B(.*?)%7D/gm, '#{$1}')));
       }
       if (url) {
         return $.ajax({
@@ -325,6 +325,45 @@
     };
 
     return truncate;
+
+  })(YinYang.filter);
+
+  YinYang.filters.beforetag = (function(_super) {
+
+    __extends(beforetag, _super);
+
+    function beforetag() {
+      beforetag.__super__.constructor.apply(this, arguments);
+    }
+
+    beforetag.prototype.process = function(val, str) {
+      if (str == null) str = 'hr';
+      return (val.split(/(<hr.*?>)/im))[0];
+    };
+
+    beforetag.prototype.process = function(val, str) {
+      if (str == null) str = 'hr';
+      return (val.split(new RegExp("(<" + str + ".*?>)", 'im')))[0];
+    };
+
+    return beforetag;
+
+  })(YinYang.filter);
+
+  YinYang.filters.aftertag = (function(_super) {
+
+    __extends(aftertag, _super);
+
+    function aftertag() {
+      aftertag.__super__.constructor.apply(this, arguments);
+    }
+
+    aftertag.prototype.process = function(val, str) {
+      if (str == null) str = 'hr';
+      return (val.split(new RegExp("(<" + str + ".*?>)", 'im')))[2];
+    };
+
+    return aftertag;
 
   })(YinYang.filter);
 
