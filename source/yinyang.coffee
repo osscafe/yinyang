@@ -62,13 +62,16 @@ class YinYang
 				name = name.replace /[^a-zA-Z0-9_]/g, '_'
 				@document_meta[name] = $(meta).attr('content')
 	fetch: (url) ->
-		if @selfload then @redrawAll @build location.href, $('html').html().replace /#%7B(.*?)%7D/gm, '#{$1}'
+		if @selfload
+			html = $('html').html()
+			html = html.replace /#%7B(.*?)%7D/gm, '#{$1}' # fix FireFox issue
+			html = html.replace /<script.*?>.*?<\/script>/gim, '' # avoid loading scripts twice
+			@redrawAll @build location.href, html
 		if url then $.ajax url: url, success: (html) => @redrawAll @build url, html
 	build: (url, html) =>
 		@template = YinYang.createTemplate url, html
 		@template.display @
 	redrawAll: (html) ->
-		html = html.replace /<script.*?src=".*?yinyang.js".*?><\/script>/gim, '' # avoid loading yinyang.js twice
 		$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
 		$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
 		for attr in $((html.match /<body.*?>/i)[0].replace /^\<body/i, '<div')[0].attributes
