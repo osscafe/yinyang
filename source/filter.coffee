@@ -27,7 +27,6 @@ class YinYang.filters.truncate extends YinYang.filter
 # beforetag filter
 # http://osscafe.github.com/yinyang/english/api.html#filter|default
 class YinYang.filters.beforetag extends YinYang.filter
-	process: (val, str = 'hr') -> (val.split /(<hr.*?>)/im)[0]
 	process: (val, str = 'hr') -> (val.split new RegExp """(<#{str}.*?>)""", 'im')[0]
 
 # aftertag filter
