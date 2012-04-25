@@ -7,6 +7,7 @@ class YinYang.Template
 		ajax: {} # Data requested via Ajax 
 		hsql: {} # Data requested via hSQL
 	placeholders: {}
+	datasource: {}
 	root: null
 	constructor: (html) ->
 		plugin_names = (name for name, plugin of YinYang.plugins).join '|'
@@ -14,7 +15,7 @@ class YinYang.Template
 			var_name = $(meta).attr 'name'
 			plugin_name = var_name.split('.')[0]
 			content = $(meta).attr 'content'
-			YinYang.plugins[plugin_name] this, var_name, content
+			@datasource[var_name] = new YinYang.plugins[plugin_name] this, var_name, content
 		t = @root = new YinYang.TemplateRoot @
 		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
 		#console?.log @root
@@ -38,12 +39,15 @@ class YinYang.Template
 		tv = @values
 		tv = tv[attr] ? '' while attr = attrs.shift()
 		tv	
-	addPlaceholder: (name, callback) ->
-		@placeholders[name] = callback
+	addPlaceholder: (uid, name, callback) ->
+		@placeholders[uid] = 
+			name: name
+			callback: callback
 	processPlaceholder: (name) ->
-		if @placeholders[name]?
-			@placeholders[name]()
-			delete @placeholders[name]
+		for uid, placeholder of @placeholders when placeholder.name.indexOf(name) == 0
+			placeholder.callback()
+			delete @placeholders[uid]
+		true
 
 # Root Node
 class YinYang.TemplateRoot
@@ -93,7 +97,7 @@ class YinYang.TemplateLoop extends YinYang.TemplateRoot
 			).join ''
 		).join ''
 	diaplayPlaceholder: (localValues,　elName, arrName) ->
-		@template.addPlaceholder arrName, =>
+		@template.addPlaceholder @placeholder_id, arrName, =>
 			html = @displayLoop localValues, elName, arrName
 			$("##{@placeholder_id}").before(html).remove()
 		"""<span class="loading" id="#{@placeholder_id}"></span>"""

@@ -26,7 +26,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class YinYang
-	@version: '0.2.2'
+	@version: '0.2.3'
 	@plugins: {}
 	@filters: {}
 	@templates: {}
@@ -89,6 +89,13 @@ class YinYang.filter
 			when 2 then @process val, @args[0], @args[1]
 			else @process val, @args[0], @args[1], @args[2]
 	process: (val) -> val
+
+class YinYang.plugin
+	constructor: (@template, @var_name, @arg) -> @process()
+	process: -> @setValue @arg
+	setValue: (data) ->
+		@template.setValue @var_name, data
+		@template.processPlaceholder @var_name
 
 # Setup
 $('head').append '<style>body {background:#FFF} body * {display:none}</style>' # Loading Style Sheet
