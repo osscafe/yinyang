@@ -26,7 +26,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class YinYang
-	@version: '0.2.3'
+	@version: '0.2.4'
 	@plugins: {}
 	@filters: {}
 	@templates: {}
@@ -73,7 +73,8 @@ class YinYang
 		@template.display @
 	redrawAll: (html) ->
 		$('body').html (html.split /<body.*?>|<\/body>/ig)[1]
-		$('head').html (html.split /<head.*?>|<\/head>/ig)[1]
+		$('head>*').not('script').remove()
+		$('head').prepend (html.split /<head.*?>|<\/head>/ig)[1]
 		for attr in $((html.match /<body.*?>/i)[0].replace /^\<body/i, '<div')[0].attributes
 			if attr.name == 'class'
 				$('body').addClass attr.value
