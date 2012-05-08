@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>API</title>
+	<meta name="keywords" content="YinYang, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
+	<meta name="description" content="API Documentation of YinYang." />
+	<meta name="author" content="CogniTom Academic Design" />
+	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design" />
+	
+	<meta property="og:site_name" content="YinYang" />
+	<meta property="og:image" content="http://www.osscafe.net/style/images/yinyang.png" />
+	
+	<meta name="pagetype" content="detail" />
+	
+	<link rel="template" href="../style/template.html" />
+	<script src="../js/jquery-1.7.1.min.js"></script>
+	<script src="../js/yinyang.js"></script>
+</head>
+<body>
+	<h1>API</h1>
+	<ul>
+		<li>Template Tags</li>
+		<li>Ajax</li>
+		<li>hSQL</li>
+	</ul>
+	<h2>Template Tags</h2>
+	
+	<h3>Template Variables</h3>
+	
+	<p>...</p>
+	
+	<pre><code>&lt;!--{copyright}--&gt;&amp;copy; 2012 Copyright reserved.&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>Or</p>
+	
+	<pre><code>&lt;a href=&quot;#{link.url}&quot;&gt;LINK&lt;/a&gt;
+	</code></pre>
+	
+	<p>...</p>
+	
+	<p>...</p>
+	
+	<h3>META Data Variables</h3>
+	
+	<p>...</p>
+	
+	<pre><code>&lt;!--{meta.description}--&gt;Some clever comment about the company&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>Or</p>
+	
+	<pre><code>&lt;meta name=&quot;author&quot; content=&quot;#{meta.author}&quot;&gt;
+	</code></pre>
+	
+	<p>...</p>
+	
+	<h3>Document Variables</h3>
+	
+	<p>You can get variables by using CSS selector like jQuery.</p>
+	
+	<pre><code>&lt;!--{@title}--&gt;Site Title&lt;!--{end}--&gt;
+	</code></pre>
+	
+	<p>This code will be replaced to $(&#39;title&#39;).text()</p>
+	
+	<h3>Loop Valiables</h3>
+	
+	<p>VALUE in ARRAY ...</p>
+	
+<pre><code>&lt;nav&gt;
+    &lt;!--{link in links}--&gt;
+    &lt;a href=&quot;#{link.url}&quot;&gt;&lt;!--{link.title}--&gt;Home&lt;!--{end}--&gt;&lt;/a&gt;
+    &lt;!--{more}--&gt;
+    &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
+    &lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;
+    &lt;!--{end}--&gt;
+&lt;/nav&gt;</code></pre>
+	
+	<p>...</p>
+	
+	<h3>Variable Filters (ver 0.3〜)</h3>
+	
+	<p>...。</p>
+	
+	<pre><code>&lt;!--{post.date|date:Y/m/d}--&gt;Home&lt;!--{end}--&gt;</code></pre>
+	
+	<p>...</p>
+	
+	<ul>
+	<li>date : </li>
+	<li>number : </li>
+	</ul>
+	<h2>Ajax</h2>
+	<h3>Ajax Variables</h3>
+	<p>...</p>
+	
+	<pre><code>&lt;meta name=&quot;ajax.links&quot; content=&quot;data/links.json&quot;&gt;</code></pre>
+	
+	<p>...</p>
+	<h2>html Search Query Language (hSQL)</h2>
+	<h3>hSQL Variables</h3>
+
+	<p>hSQL(html Search Query Language) is SQL like language for searching HTML files on server</p>
+	
+	<pre><code>&lt;meta name=&quot;hsql.posts&quot; content=&quot;SELECT * FROM ./  LIMIT 3&quot;&gt;</code></pre>
+	
+	<p>...</p>
+	
+<pre><code>[
+    {
+        &quot;title&quot; : &quot;History of YinYang&quot;,
+        &quot;description&quot; : &quot;A new template framework!&quot;,
+        &quot;file&quot; : &quot;history.html&quot;,
+        &quot;created&quot; : &quot;2012-01-28T21:18+09:00&quot;,
+        &quot;modified&quot; : &quot;2012-01-28T21:18+09:18&quot;
+    },
+    {
+        &quot;title&quot; : &quot;How to use YinYang&quot;,
+        …
+    },
+    …
+]</code></pre>
+	
+	<p>You need helper file on server-side to use hSQL.</p>
+	
+	<ul>
+	<li>hsql.php</li>
+	<li>.htaccess</li>
+	</ul>
+	
+	<h3>SELECT Clause</h3>
+	
+	<p>...</p>
+	
+	<ul>
+	<li>File information
+	
+	<ul>
+	<li>file.name</li>
+	<li>file.created</li>
+	<li>file.modified</li>
+	</ul></li>
+	<li>META information in HTML
+	
+	<ul>
+	<li>meta.description</li>
+	<li>meta.author</li>
+	</ul></li>
+	<li>HTML tags via CSS selectors
+	
+	<ul>
+	<li>@title → $(&#39;title&#39;).text()</li>
+	<li>@div#main h3 → $(&#39;div#main h3&#39;).text()</li>
+	</ul></li>
+	</ul>
+	
+	<p>...</p>
+	
+	<ul>
+	<li>...
+	
+	<ul>
+	<li>xxx.yyy → yyy</li>
+	</ul></li>
+	<li>HTML Tags
+	
+	<ul>
+	<li>@xxx → xxx</li>
+	<li>@xxx#yyy → xxx_yyy</li>
+	<li>@xxx#yyy zzz.www → xxx_yyy_zzz_www</li>
+	</ul></li>
+	</ul>
+	
+	<p>'*' is a shorthand.</p>
+	
+	<pre><code>SELECT * FROM ./ LIMIT 3</code></pre>
+	
+	<p>means...</p>
+	
+<pre><code>SELECT
+    @title as title,
+    meta.description as description,
+    file.name as file,
+    file.created as created,
+    file.modified as modified
+FROM
+    ./
+LIMIT
+    3
+</code></pre>
+	
+	<h3>WHERE Clause (ver 0.3〜)</h3>
+	
+	<p>...</p>
+	
+	<p>...</p>
+	
+	<pre><code>WHERE meta.keyword HAS &#39;hot&#39;</code></pre>
+	
+	<p>...</p>
+	
+	<p>...</p>
+	
+	<ul>
+	<li>=, IS</li>
+	<li>&lt;&gt;, IS NOT</li>
+	<li>&lt;, &gt;, &lt;=, &gt;=</li>
+	<li>HAS</li>
+	</ul>
+	
+	<h3>ORDER BY Clause</h3>
+	
+	<p>...</p>
+	
+	<pre><code>ORDER BY file.created DESC</code></pre>
+	
+	<p>...</p>
+	
+	<h3>LIMIT Clause</h3>
+	
+	<p>...</p>
+	
+	<pre><code>LIMIT 10</code></pre>
+	
+	<p>...</p>
+	
+	<p>...</p>
+	
+	<pre><code>LIMIT 11, 10</code></pre>
+	
+	<h3>Hiding from hSQL (ver 0.3〜)</h3>
+	
+	<p>...</p>
+	
+	<pre><code>&lt;meta name=&quot;hsql:searchable&quot; content=&quot;false&quot;&gt;</code></pre>
+
+
+</body>
+</html>
