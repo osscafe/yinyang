@@ -1,0 +1,8 @@
+[
+	{"title":"Home", "url":"index.html"},
+	{"title":"How To Use", "url":"howtouse.html"},
+	{"title":"API", "url": "api.html"},
+	{"title":"Filters", "url": "filters.html"},
+	{"title":"About", "url": "about.html"},
+	{"title":"Download", "url": "https://github.com/osscafe/yinyang/zipball/master"}
+]

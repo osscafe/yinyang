@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Filters</title>
+	<meta name="keywords" content="YinYang, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
+	<meta name="description" content="API Documentation of YinYang." />
+	<meta name="author" content="CogniTom Academic Design" />
+	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design" />
+	
+	<meta property="og:site_name" content="YinYang" />
+	<meta property="og:image" content="http://www.osscafe.net/style/images/yinyang.png" />
+	
+	<meta name="pagetype" content="detail" />
+	<meta name="yinyang:selfload" content="true" />
+	
+	<link rel="template" href="../style/template.html" />
+	<script src="../js/jquery-1.7.1.min.js"></script>
+	<script src="../js/yinyang.js"></script>
+</head>
+<body>
+	<h1>Filters</h1>
+	<h2>Original Text</h2>
+	<p class="sample">
+		Lorem Ipsum is simply dummy text of the printing and 
+		typesetting industry. <br />
+		Lorem Ipsum has been the industry's standard dummy
+		text ever since the 1500s, when an unknown printer
+		took a galley of type and scrambled it to make a type
+		specimen book. </p>
+<pre class="prettyprint linenums">
+&lt;p class=&quot;sample&quot;&gt;
+  Lorem Ipsum is simply dummy text of the printing and 
+  typesetting industry. <br />
+  Lorem Ipsum has been the industry's standard dummy
+  text ever since the 1500s, when an unknown printer
+  took a galley of type and scrambled it to make a type
+  specimen book.
+&lt;/p&gt;
+</pre>
+	<h2>Smarty Compatible Filters</h2>
+	<h3>default</h3>
+	<p><!--{@p.sample|default:"(no value)"}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|default:&quot;(no value)&quot;}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<p><!--{@p.notExists|default:"(no value)"}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.notExists|default:&quot;(no value)&quot;}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h3>nl2br</h3>
+	<p><!--{@p.sample|nl2br}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|nl2br}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h3>truncate</h3>
+	<p><!--{@p.sample|truncate:50}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|truncate:50}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<p><!--{@p.sample|truncate:100:'...続く'}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|truncate:100:'...'}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h2>Other Filters</h2>
+	<h3>beforetag</h3>
+	<p><!--{@p.sample|beforetag:br}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|beforetag:br}--&gt;content&lt;!--{end}--&gt;
+</pre>
+	<h3>aftertag</h3>
+	<p><!--{@p.sample|aftertag:br}-->content<!--{end}--></p>
+<pre class="prettyprint linenums">
+&lt;!--{@p.sample|aftertag:br}--&gt;content&lt;!--{end}--&gt;
+</pre>
+</body>
+</html>
