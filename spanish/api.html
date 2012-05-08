@@ -31,13 +31,11 @@
 	
 	<p>...</p>
 	
-	<pre><code>&lt;!--{copyright}--&gt;&amp;copy; 2012 Copyright reserved.&lt;!--{end}--&gt;
-	</code></pre>
+	<pre class="prettyprint linenums">&lt;!--{copyright}--&gt;&amp;copy; 2012 Copyright reserved.&lt;!--{end}--&gt;</pre>
 	
 	<p>Or</p>
 	
-	<pre><code>&lt;a href=&quot;#{link.url}&quot;&gt;LINK&lt;/a&gt;
-	</code></pre>
+	<pre class="prettyprint linenums">&lt;a href=&quot;#{link.url}&quot;&gt;LINK&lt;/a&gt;</pre>
 	
 	<p>...</p>
 	
@@ -47,13 +45,11 @@
 	
 	<p>...</p>
 	
-	<pre><code>&lt;!--{meta.description}--&gt;Some clever comment about the company&lt;!--{end}--&gt;
-	</code></pre>
+	<pre class="prettyprint linenums">&lt;!--{meta.description}--&gt;Some clever comment about the company&lt;!--{end}--&gt;</pre>
 	
 	<p>Or</p>
 	
-	<pre><code>&lt;meta name=&quot;author&quot; content=&quot;#{meta.author}&quot;&gt;
-	</code></pre>
+	<pre class="prettyprint linenums">&lt;meta name=&quot;author&quot; content=&quot;#{meta.author}&quot;&gt;</pre>
 	
 	<p>...</p>
 	
@@ -61,8 +57,7 @@
 	
 	<p>You can get variables by using CSS selector like jQuery.</p>
 	
-	<pre><code>&lt;!--{@title}--&gt;Site Title&lt;!--{end}--&gt;
-	</code></pre>
+	<pre class="prettyprint linenums">&lt;!--{@title}--&gt;Site Title&lt;!--{end}--&gt;</pre>
 	
 	<p>This code will be replaced to $(&#39;title&#39;).text()</p>
 	
@@ -70,22 +65,22 @@
 	
 	<p>VALUE in ARRAY ...</p>
 	
-<pre><code>&lt;nav&gt;
+<pre class="prettyprint linenums">&lt;nav&gt;
     &lt;!--{link in links}--&gt;
     &lt;a href=&quot;#{link.url}&quot;&gt;&lt;!--{link.title}--&gt;Home&lt;!--{end}--&gt;&lt;/a&gt;
     &lt;!--{more}--&gt;
     &lt;a href=&quot;#&quot;&gt;About&lt;/a&gt;
     &lt;a href=&quot;#&quot;&gt;Contact&lt;/a&gt;
     &lt;!--{end}--&gt;
-&lt;/nav&gt;</code></pre>
+&lt;/nav&gt;</pre>
 	
 	<p>...</p>
 	
 	<h3>Variable Filters (ver 0.3〜)</h3>
 	
-	<p>...。</p>
+	<p>...</p>
 	
-	<pre><code>&lt;!--{post.date|date:Y/m/d}--&gt;Home&lt;!--{end}--&gt;</code></pre>
+	<pre class="prettyprint linenums">&lt;!--{post.date|date:Y/m/d}--&gt;Home&lt;!--{end}--&gt;</pre>
 	
 	<p>...</p>
 	
@@ -97,7 +92,7 @@
 	<h3>Ajax Variables</h3>
 	<p>...</p>
 	
-	<pre><code>&lt;meta name=&quot;ajax.links&quot; content=&quot;data/links.json&quot;&gt;</code></pre>
+	<pre class="prettyprint linenums">&lt;meta name=&quot;ajax.links&quot; content=&quot;data/links.json&quot;&gt;</pre>
 	
 	<p>...</p>
 	<h2>html Search Query Language (hSQL)</h2>
@@ -105,11 +100,11 @@
 
 	<p>hSQL(html Search Query Language) is SQL like language for searching HTML files on server</p>
 	
-	<pre><code>&lt;meta name=&quot;hsql.posts&quot; content=&quot;SELECT * FROM ./  LIMIT 3&quot;&gt;</code></pre>
+	<pre class="prettyprint linenums">&lt;meta name=&quot;hsql.posts&quot; content=&quot;SELECT * FROM ./  LIMIT 3&quot;&gt;</pre>
 	
 	<p>...</p>
 	
-<pre><code>[
+<pre class="prettyprint linenums">[
     {
         &quot;title&quot; : &quot;History of YinYang&quot;,
         &quot;description&quot; : &quot;A new template framework!&quot;,
@@ -122,7 +117,7 @@
         …
     },
     …
-]</code></pre>
+]</pre>
 	
 	<p>You need helper file on server-side to use hSQL.</p>
 	
@@ -176,11 +171,11 @@
 	
 	<p>'*' is a shorthand.</p>
 	
-	<pre><code>SELECT * FROM ./ LIMIT 3</code></pre>
+	<pre class="prettyprint linenums">SELECT * FROM ./ LIMIT 3</pre>
 	
 	<p>means...</p>
 	
-<pre><code>SELECT
+<pre class="prettyprint linenums">SELECT
     @title as title,
     meta.description as description,
     file.name as file,
@@ -189,8 +184,7 @@
 FROM
     ./
 LIMIT
-    3
-</code></pre>
+    3</pre>
 	
 	<h3>WHERE Clause (ver 0.3〜)</h3>
 	
@@ -198,7 +192,7 @@ LIMIT
 	
 	<p>...</p>
 	
-	<pre><code>WHERE meta.keyword HAS &#39;hot&#39;</code></pre>
+	<pre class="prettyprint linenums">WHERE meta.keyword HAS &#39;hot&#39;</pre>
 	
 	<p>...</p>
 	
@@ -215,7 +209,7 @@ LIMIT
 	
 	<p>...</p>
 	
-	<pre><code>ORDER BY file.created DESC</code></pre>
+	<pre class="prettyprint linenums">ORDER BY file.created DESC</pre>
 	
 	<p>...</p>
 	
@@ -223,19 +217,19 @@ LIMIT
 	
 	<p>...</p>
 	
-	<pre><code>LIMIT 10</code></pre>
+	<pre class="prettyprint linenums">LIMIT 10</pre>
 	
 	<p>...</p>
 	
 	<p>...</p>
 	
-	<pre><code>LIMIT 11, 10</code></pre>
+	<pre class="prettyprint linenums">LIMIT 11, 10</pre>
 	
 	<h3>Hiding from hSQL (ver 0.3〜)</h3>
 	
 	<p>...</p>
 	
-	<pre><code>&lt;meta name=&quot;hsql:searchable&quot; content=&quot;false&quot;&gt;</code></pre>
+	<pre class="prettyprint linenums">&lt;meta name=&quot;hsql:searchable&quot; content=&quot;false&quot;&gt;</pre>
 
 
 </body>
