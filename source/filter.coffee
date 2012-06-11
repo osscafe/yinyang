@@ -17,12 +17,12 @@ class YinYang.filters.nl2br extends YinYang.filter
 class YinYang.filters.truncate extends YinYang.filter
 	process: (val, max = 80, txt = '...') -> if val.length > max then val.substring(0, max - txt.length) + txt else val
 
-# date_format filter
-# http://osscafe.github.com/yinyang/english/api.html#filter|date_format
-#class YinYang.filters.date_format extends YinYang.filter
-#	process: (val, format) -> strftime format, val
-
 # Original Filters
+
+# date filter
+# http://osscafe.github.com/yinyang/english/api.html#filter|date
+#class YinYang.filters.date extends YinYang.filter
+#	process: (val, format) -> strftime format, val
 
 # beforetag filter
 # http://osscafe.github.com/yinyang/english/api.html#filter|default

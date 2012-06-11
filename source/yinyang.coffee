@@ -26,10 +26,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class YinYang
-	@version: '0.2.4'
+	@version: '0.2.5'
 	@plugins: {}
 	@filters: {}
 	@templates: {}
+	@onvarsetHandler: {}
 	@createFilter: (str) ->
 		args = str.split ':'
 		filter_name = args.shift()
@@ -48,6 +49,11 @@ class YinYang
 			v = if c is 'x' then r else r & 3 | 8
 			v.toString 16
 		.toUpperCase()
+	@onvarset: (var_name, f) ->
+		if f
+			@onvarsetHandler[var_name] = f
+		else
+			@onvarsetHandler[var_name]() if @onvarsetHandler[var_name]?
 	
 	template: null
 	document_meta: {}
@@ -97,6 +103,7 @@ class YinYang.plugin
 	setValue: (data) ->
 		@template.setValue @var_name, data
 		@template.processPlaceholder @var_name
+		YinYang.onvarset @var_name # fire event
 
 # Setup
 $('head').append '<style>body {background:#FFF} body * {display:none}</style>' # Loading Style Sheet
