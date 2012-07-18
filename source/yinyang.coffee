@@ -26,7 +26,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class YinYang
-	@version: '0.2.5'
+	@version: '0.2.7'
 	@plugins: {}
 	@filters: {}
 	@templates: {}
