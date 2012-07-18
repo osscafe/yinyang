@@ -102,7 +102,7 @@ class YinYang.plugin
 	process: -> @setValue @arg
 	setValue: (data) ->
 		@template.setValue @var_name, data
-		@template.processPlaceholder @var_name
+		@template.processPlaceholder @var_name, data
 		YinYang.onvarset @var_name # fire event
 
 # Setup

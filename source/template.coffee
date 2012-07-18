@@ -18,15 +18,9 @@ class YinYang.Template
 			@datasource[var_name] = new YinYang.plugins[plugin_name] this, var_name, content
 		t = @root = new YinYang.TemplateRoot @
 		t = t.add flagment for flagment in html.split /(<!--\{.+?\}-->|\#\{.+?\})/gim when flagment?
-		#console?.log @root
 	display: (doc) ->
 		@values.meta = doc.document_meta # copy from document_meta
 		@root.display()	
-	valueExists: (combinedKey) ->
-		attrs = combinedKey.split '.'
-		tv = @values
-		tv = tv[attr] ? null while tv? and attr = attrs.shift()
-		tv?
 	setValue: (combinedKey, val) ->
 		attrs = combinedKey.split '.'
 		lastattr = attrs.pop()
@@ -34,18 +28,22 @@ class YinYang.Template
 		tv = tv[attr] ? '' while attr = attrs.shift()
 		tv[lastattr] = val
 	setValues: (vals) -> @values[key] = val for own key, val of vals
-	getValue: (combinedKey) ->
+	getValue: (combinedKey, tv = @values) ->
 		attrs = combinedKey.split '.'
-		tv = @values
 		tv = tv[attr] ? '' while attr = attrs.shift()
-		tv	
+		tv
+	valueExists: (combinedKey, tv = @values) ->
+		attrs = combinedKey.split '.'
+		tv = tv[attr] ? null while tv? and attr = attrs.shift()
+		tv?
 	addPlaceholder: (uid, name, callback) ->
 		@placeholders[uid] = 
 			name: name
 			callback: callback
-	processPlaceholder: (name) ->
-		for uid, placeholder of @placeholders when placeholder.name.indexOf(name) == 0
-			placeholder.callback()
+	processPlaceholder: (name, data) ->
+		for uid, placeholder of @placeholders when placeholder.name.match new RegExp "^#{name}($|\\.|\\[)"
+			placeholder.callback data
+			#console?.log "@placeholders['#{uid}'] processed"
 			delete @placeholders[uid]
 		true
 
@@ -80,15 +78,22 @@ class YinYang.TemplateLoop extends YinYang.TemplateRoot
 	display: (localValues) ->
 		@placeholder_id = YinYang.guid()
 		[elName, arrName] = @value.split /\s+in\s+/
-		if @template.valueExists arrName
-			@displayLoop localValues, elName, arrName
+		if @template.valueExists arrName, localValues
+			#console?.log "localValue:#{@value}"
+			#console?.log localValues
+			@displayLoop localValues, elName, (@template.getValue arrName, localValues)
+		else if @template.valueExists arrName
+			#console?.log "templateValue:#{@value}"
+			@displayLoop localValues, elName, (@template.getValue arrName)
 		else if arrName.match /^(ajax|hsql)\./
+			#console?.log "placeholder:#{@value}"
 			@diaplayPlaceholder localValues, elName, arrName
 		else
-			console?.log 'Template value not found.'
+			console?.log "not found:#{@value}"
+			console?.log localValues
 			''
-	displayLoop: (localValues, elName, arrName) ->
-		(for el in @template.getValue arrName
+	displayLoop: (localValues, elName, loopObj) ->
+		(for el in loopObj
 			(for child in @children
 				lv = {}
 				lv[key] = val for key, val of localValues
@@ -96,9 +101,9 @@ class YinYang.TemplateLoop extends YinYang.TemplateRoot
 				child.display lv
 			).join ''
 		).join ''
-	diaplayPlaceholder: (localValues,　elName, arrName) ->
-		@template.addPlaceholder @placeholder_id, arrName, =>
-			html = @displayLoop localValues, elName, arrName
+	diaplayPlaceholder: (localValues, elName, arrName) ->
+		@template.addPlaceholder @placeholder_id, arrName, (data) =>
+			html = @displayLoop localValues, elName, data
 			$("##{@placeholder_id}").before(html).remove()
 		"""<span class="loading" id="#{@placeholder_id}"></span>"""
 	
@@ -116,12 +121,7 @@ class YinYang.TemplateVar extends YinYang.TemplateRoot
 		#console?.log @value + ':' + v #for debug
 		v
 	displayDom: -> $(@value.substring 1).html()
-	displayVar: -> (@getLocalValue @value) or @template.getValue @value
-	getLocalValue: (combinedKey) ->
-		attrs = combinedKey.split '.'
-		tv = @localValues
-		tv = tv[attr] ? '' while attr = attrs.shift()
-		tv
+	displayVar: -> (@template.getValue @value, @localValues) or (@template.getValue @value)
 	
 # Text Node
 class YinYang.TemplateText extends YinYang.TemplateRoot
