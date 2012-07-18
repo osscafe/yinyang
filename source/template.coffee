@@ -71,7 +71,16 @@ class YinYang.TemplateRoot
 		switch ret
 			when 'child' then t
 			when 'self' then @
-	display: (localValues = {}) -> (child.display localValues for child in @children).join ''
+	display: (localValues = {}) ->
+		html = (child.display localValues for child in @children).join ''
+		re = /(<(table|thead|tbody|tr).*?>)\s*<span\s+class="loading"\s+id="(.+?)"><\/span>/
+		html.replace re, () ->
+			map =
+				table: 'tbody'
+				thead: 'tr'
+				tbody: 'tr'
+				tr: 'td'
+			"""#{arguments[1]}<#{map[arguments[2]]} class="loading" id="#{arguments[3]}"></#{map[arguments[2]]}>"""
 	
 # Loop Node
 class YinYang.TemplateLoop extends YinYang.TemplateRoot
