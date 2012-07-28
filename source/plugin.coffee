@@ -15,7 +15,7 @@ class YinYang.plugins.ajax extends YinYang.plugin
 # http://osscafe.github.com/yinyang/english/api.html#hsql
 class YinYang.plugins.hsql extends YinYang.plugin
 	process: ->
-		$.getJSON("/hsql.php?q=#{hsql}")
+		$.getJSON("/hsql.php?q=#{@arg}")
 		.success (data) => 
 			console?.log "hsql success: #{@var_name}"
 			@setValue data
