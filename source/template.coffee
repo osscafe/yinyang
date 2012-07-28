@@ -52,7 +52,6 @@ class YinYang.TemplateRoot
 	constructor: (@template, @parent = null, @value = '', @ignore = false) ->
 		@children = []
 	add: (value) ->
-		value = value.replace /%7C/, '|' #bug fix for Firefox
 		re = 
 			pend: /<!--\{end\}-->/
 			more: /<!--\{more\}-->/
