@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>How To Use</title>
+	<meta name="keywords" content="YinYang, template, js, javascript, ミルクコーヒー, クライアントサイドテンプレート" />
+	<meta name="description" content="How to use YinYang." />
+	<meta name="author" content="CogniTom Academic Design" />
+	<meta name="copyright" content="&copy; 2012 - CogniTom Academic Design" />
+	
+	<meta property="og:site_name" content="YinYang" />
+	<meta property="og:image" content="http://www.osscafe.net/style/images/yinyang.png" />
+	
+	<meta name="pagetype" content="detail" />
+	<meta name="ajax.multiloop2" content="multiloop2.json" />
+	<meta name="ajax.multiloop" content="multiloop.json" />
+	<meta name="ajax.multiloop3" content="multiloop3.json" />
+	<meta name="yinyang:selfload" content="true" />
+	
+	<link rel="template" href="../style/template.html" />
+	<script src="../js/jquery-1.7.1.min.js"></script>
+	<script src="../js/yinyang.js"></script>
+</head>
+<body>
+	<h1>Test Cases</h1>
+	<p>YinYangで正しくレンダリングされるかのテストです。</p>
+	
+	<h2>Multi Loop (1)</h2>
+
+	<ul>
+	<!--{loop in ajax.multiloop}-->
+		<li>
+			テスト。
+			<ul>
+				<!--{val in loop}-->
+				<li>#{val}</li>
+				<!--{end}-->
+			</ul>
+		</li>
+	<!--{end}-->
+	</ul>
+	
+	<h2>Multi Loop (2)</h2>
+
+	<ul>
+	<!--{loop in ajax.multiloop2}-->
+		<li>
+			テスト2。
+			<ul>
+				<!--{val in loop}-->
+				<li>#{val.title}</li>
+				<!--{end}-->
+			</ul>
+		</li>
+	<!--{end}-->
+	</ul>
+	
+	<h2>Multi Loop (3)</h2>
+
+	<ul>
+	<!--{loop in ajax.multiloop3}-->
+		<li>
+			#{loop.name}
+			<ul>
+				<!--{val in loop.letters}-->
+				<li>#{val.title}</li>
+				<!--{end}-->
+			</ul>
+		</li>
+	<!--{end}-->
+	</ul>
+</body>
+</html>
